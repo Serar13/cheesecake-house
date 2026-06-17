@@ -5,7 +5,6 @@ import {
   getDocs,
   query,
   where,
-  orderBy,
   onSnapshot,
 } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -26,16 +25,19 @@ function withId(snapshot) {
   return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
+function bySortOrder(a, b) {
+  return (Number(a.sortOrder) || 0) - (Number(b.sortOrder) || 0);
+}
+
 // ---- Categories ------------------------------------------------------------
 export async function getActiveCategories() {
   try {
     const q = query(
       collection(db, COLLECTIONS.CATEGORIES),
-      where('active', '==', true),
-      orderBy('sortOrder')
+      where('active', '==', true)
     );
     const snap = await getDocs(q);
-    return withId(snap);
+    return withId(snap).sort(bySortOrder);
   } catch (error) {
     console.error('getActiveCategories failed:', error);
     return [];
@@ -46,12 +48,11 @@ export function subscribeActiveCategories(callback, onError) {
   try {
     const q = query(
       collection(db, COLLECTIONS.CATEGORIES),
-      where('active', '==', true),
-      orderBy('sortOrder')
+      where('active', '==', true)
     );
     return onSnapshot(
       q,
-      (snap) => callback(withId(snap)),
+      (snap) => callback(withId(snap).sort(bySortOrder)),
       (error) => {
         console.error('subscribeActiveCategories failed:', error);
         if (onError) onError(error);
@@ -72,11 +73,10 @@ export async function getActiveProducts() {
   try {
     const q = query(
       collection(db, COLLECTIONS.PRODUCTS),
-      where('active', '==', true),
-      orderBy('sortOrder')
+      where('active', '==', true)
     );
     const snap = await getDocs(q);
-    return snap.docs.map((d) => normalizeProduct(d.id, d.data()));
+    return snap.docs.map((d) => normalizeProduct(d.id, d.data())).sort(bySortOrder);
   } catch (error) {
     console.error('getActiveProducts failed:', error);
     return [];
@@ -87,12 +87,11 @@ export function subscribeActiveProducts(callback, onError) {
   try {
     const q = query(
       collection(db, COLLECTIONS.PRODUCTS),
-      where('active', '==', true),
-      orderBy('sortOrder')
+      where('active', '==', true)
     );
     return onSnapshot(
       q,
-      (snap) => callback(snap.docs.map((d) => normalizeProduct(d.id, d.data()))),
+      (snap) => callback(snap.docs.map((d) => normalizeProduct(d.id, d.data())).sort(bySortOrder)),
       (error) => {
         console.error('subscribeActiveProducts failed:', error);
         if (onError) onError(error);
