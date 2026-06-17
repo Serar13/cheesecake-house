@@ -1,84 +1,125 @@
-import React, { useState } from 'react';
-import { 
-  StyleSheet, 
-  Text, 
-  View, 
-  ScrollView, 
-  TouchableOpacity, 
+import React, { useState, useEffect, useMemo } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
   Alert,
-  Image
+  Image,
+  ActivityIndicator
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../context/AppContext';
+import { getTablesByLocation } from '../services/firestore';
 
-const TABLES_CONFIG = {
-  'Cluj-Napoca': [
-    { id: 'C1', name: 'Masa 1', seats: 2, status: 'available', x: 17, y: 83, descRo: 'Interior Stânga-Jos', descEn: 'Indoor Left-Bottom', descHu: 'Belső Bal-Lent' },
-    { id: 'C2', name: 'Masa 2', seats: 2, status: 'booked', x: 32, y: 83, descRo: 'Interior Centru-Jos', descEn: 'Indoor Center-Bottom', descHu: 'Belső Közép-Lent' },
-    { id: 'C3', name: 'Masa 3', seats: 2, status: 'available', x: 17, y: 71, descRo: 'Interior Stânga-Mijloc', descEn: 'Indoor Left-Mid', descHu: 'Belső Bal-Közép' },
-    { id: 'C4', name: 'Masa 4', seats: 2, status: 'available', x: 32, y: 71, descRo: 'Interior Centru-Mijloc', descEn: 'Indoor Center-Mid', descHu: 'Belső Közép-Közép' },
-    { id: 'C5', name: 'Masa 5', seats: 2, status: 'booked', x: 17, y: 58.5, descRo: 'Interior Stânga-Sus', descEn: 'Indoor Left-Top', descHu: 'Belső Bal-Fent' },
-    { id: 'C6', name: 'Masa 6', seats: 2, status: 'available', x: 32, y: 58.5, descRo: 'Interior Centru-Sus', descEn: 'Indoor Center-Top', descHu: 'Belső Közép-Fent' },
-    { id: 'C7', name: 'Masa 7', seats: 2, status: 'available', x: 17, y: 45.5, descRo: 'Interior Stânga-Fiecare (Sus)', descEn: 'Indoor Left-Top (Upper)', descHu: 'Belső Bal-Fent (Felső)' },
-    { id: 'C8', name: 'Masa 8', seats: 2, status: 'available', x: 49.5, y: 83, descRo: 'Interior Dreapta-Jos (Lângă Bucătărie)', descEn: 'Indoor Right-Bottom (Near Kitchen)', descHu: 'Belső Jobb-Lent (Konyha mellett)' },
-    { id: 'C9', name: 'Masa 9', seats: 4, status: 'available', x: 79, y: 30.5, descRo: 'Terasă Outdoor (Sus)', descEn: 'Outdoor Terrace (Top)', descHu: 'Kültéri terasz (Fent)' },
-    { id: 'C10', name: 'Masa 10', seats: 4, status: 'booked', x: 79, y: 55, descRo: 'Terasă Outdoor (Mijloc)', descEn: 'Outdoor Terrace (Mid)', descHu: 'Kültéri terasz (Közép)' },
-    { id: 'C11', name: 'Masa 11', seats: 4, status: 'available', x: 79, y: 76.5, descRo: 'Terasă Outdoor (Jos)', descEn: 'Outdoor Terrace (Bottom)', descHu: 'Kültéri terasz (Lent)' }
-  ],
-  'Bistrița': [
-    { id: 'B1', name: 'Masa 1', seats: 2, status: 'available', x: 26.5, y: 31, descRo: 'Arcadă Stânga', descEn: 'Arch Left', descHu: 'Bal oldali árkád' },
-    { id: 'B2', name: 'Masa 2', seats: 2, status: 'available', x: 38.5, y: 30.5, descRo: 'Arcadă Centru-Stânga', descEn: 'Arch Center-Left', descHu: 'Közép-bal oldali árkád' },
-    { id: 'B3', name: 'Masa 3', seats: 2, status: 'booked', x: 51, y: 30.5, descRo: 'Arcadă Centru-Dreapta', descEn: 'Arch Center-Right', descHu: 'Közép-jobb oldali árkád' },
-    { id: 'B4', name: 'Masa 4', seats: 2, status: 'available', x: 63, y: 31, descRo: 'Arcadă Dreapta', descEn: 'Arch Right', descHu: 'Jobb oldali árkád' },
-    { id: 'B5', name: 'Masa 5', seats: 2, status: 'available', x: 27, y: 49.5, descRo: 'Mijloc Stânga', descEn: 'Center Left', descHu: 'Közép bal' },
-    { id: 'B6', name: 'Masa 6', seats: 2, status: 'available', x: 44, y: 47, descRo: 'Mijloc Dreapta', descEn: 'Center Right', descHu: 'Közép jobb' },
-    { id: 'B7', name: 'Masa 7', seats: 2, status: 'booked', x: 25.5, y: 72, descRo: 'Boutique Stânga-Jos', descEn: 'Boutique Left-Bottom', descHu: 'Boutique bal-lent' }
-  ],
-  'Târgu Mureș': [
-    { id: 'T1', name: 'Masa 1', seats: 2, status: 'available', x: 29, y: 80, descRo: 'Lângă Intrare', descEn: 'Near Entrance', descHu: 'Bejárat mellett' },
-    { id: 'T2', name: 'Masa 2', seats: 4, status: 'available', x: 59, y: 40, descRo: 'Zona Centrală (Sus)', descEn: 'Center Zone (Top)', descHu: 'Középső zóna (Fent)' },
-    { id: 'T3', name: 'Masa 3', seats: 4, status: 'booked', x: 59, y: 54, descRo: 'Zona Centrală (Mijloc)', descEn: 'Center Zone (Mid)', descHu: 'Középső zóna (Közép)' },
-    { id: 'T4', name: 'Masa 4', seats: 4, status: 'available', x: 60, y: 68, descRo: 'Zona Centrală (Jos)', descEn: 'Center Zone (Bottom)', descHu: 'Középső zóna (Lent)' },
-    { id: 'T5', name: 'Masa 5', seats: 2, status: 'available', x: 76, y: 36, descRo: 'Canapea Sepeu (Sus)', descEn: 'Sofa Booth (Top)', descHu: 'Boxos kanapé (Fent)' },
-    { id: 'T6', name: 'Masa 6', seats: 2, status: 'available', x: 76, y: 49, descRo: 'Canapea Sepeu (Mijloc-Sus)', descEn: 'Sofa Booth (Mid-Top)', descHu: 'Boxos kanapé (Közép-Fent)' },
-    { id: 'T7', name: 'Masa 7', seats: 2, status: 'booked', x: 76, y: 61, descRo: 'Canapea Sepeu (Mijloc-Jos)', descEn: 'Sofa Booth (Mid-Bottom)', descHu: 'Boxos kanapé (Közép-Lent)' },
-    { id: 'T8', name: 'Masa 8', seats: 2, status: 'booked', x: 76, y: 74, descRo: 'Canapea Sepeu (Jos)', descEn: 'Sofa Booth (Bottom)', descHu: 'Boxos kanapé (Lent)' }
-  ]
-};
+const FALLBACK_LOCATIONS = ['Cluj-Napoca', 'Bistrița', 'Târgu Mureș'];
 
-const PREORDER_PRODUCTS = [
-  { id: 'p1', name: 'Cheesecake Clasic New York', price: 24, key: 'classic_cheesecake' },
-  { id: 'p2', name: 'Cheesecake cu Fistic premium', price: 28, key: 'pistachio_cheesecake' },
-  { id: 'p3', name: 'Cheesecake Belgian Chocolate', price: 26, key: 'chocolate_cheesecake' },
-  { id: 'p4', name: 'Cappuccino Cremoso', price: 14, key: 'cappuccino' },
-  { id: 'p5', name: 'Flat White Special', price: 16, key: 'flat_white' }
-];
-
+// Floor-plan assets kept locally (these visual plans are not in Firestore).
 const LAYOUT_IMAGES = {
   'Cluj-Napoca': require('../assets/cluj_3d.png'),
   'Bistrița': require('../assets/bistrita_3d.png'),
   'Târgu Mureș': require('../assets/mures_3d.png')
 };
 
+// Map a date label to a YYYY-MM-DD string (used for conflict + persistence).
+const dayLabelToDate = (label) => {
+  const d = new Date();
+  if (label === 'Mâine') d.setDate(d.getDate() + 1);
+  else if (label === 'Poimâine') d.setDate(d.getDate() + 2);
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+};
+
 export default function ReservationsScreen() {
-  const { reservations, addReservation, colors, isLoggedIn, requestAuth: openAuth, language, t } = useApp();
+  const {
+    reservations, addReservation, colors, isLoggedIn,
+    requestAuth: openAuth, language, t, products, locations
+  } = useApp();
   const styles = getStyles(colors);
-  const [location, setLocation] = useState('Cluj-Napoca');
+
+  // Location names from Firestore, graceful fallback to static list.
+  const locationNames = useMemo(() => {
+    const names = (locations || []).map(l => l.name).filter(Boolean);
+    return names.length > 0 ? names : FALLBACK_LOCATIONS;
+  }, [locations]);
+
+  const [location, setLocation] = useState(FALLBACK_LOCATIONS[0]);
   const [guests, setGuests] = useState(2);
   const [day, setDay] = useState('Astăzi');
   const [time, setTime] = useState('19:30');
   const [selectedTable, setSelectedTable] = useState(null);
 
+  const [tablesData, setTablesData] = useState([]);
+  const [tablesLoading, setTablesLoading] = useState(false);
+
+  const selectedLocationObj = useMemo(
+    () => (locations || []).find(l => l.name === location),
+    [locations, location]
+  );
+
+  // Load tables for the selected location from Firestore.
+  useEffect(() => {
+    let active = true;
+    const locId = selectedLocationObj?.id;
+    if (!locId) {
+      setTablesData([]);
+      return () => { active = false; };
+    }
+    setTablesLoading(true);
+    (async () => {
+      try {
+        const rows = await getTablesByLocation(locId);
+        if (active) setTablesData(rows);
+      } catch (err) {
+        console.error('Error loading tables:', err);
+        if (active) setTablesData([]);
+      } finally {
+        if (active) setTablesLoading(false);
+      }
+    })();
+    return () => { active = false; };
+  }, [selectedLocationObj?.id]);
+
   const getTableDesc = (table) => {
-    if (language === 'ro') return table.descRo;
-    if (language === 'en') return table.descEn;
-    return table.descHu || table.descRo;
+    return table.notes || table.descRo || '';
   };
-  
+
   // Pre-Order Quantities mapping: { productId: quantity }
   const [preOrderQuantities, setPreOrderQuantities] = useState({});
 
-  const tables = TABLES_CONFIG[location] || [];
+  // Pre-order options come from the shared Firestore product list.
+  const preorderProducts = useMemo(
+    () => (products || []).slice(0, 8),
+    [products]
+  );
+
+  // The current target date string for this booking.
+  const targetDate = dayLabelToDate(day);
+
+  // A table is "booked" if a non-cancelled reservation already holds it
+  // for the chosen date + time.
+  const isTableBooked = (table) => {
+    return (reservations || []).some(r =>
+      r.tableId && r.tableId === table.id &&
+      (r.rawDate || '') === targetDate &&
+      (r.time || '') === time &&
+      r.status !== 'Anulată'
+    );
+  };
+
+  // Compose the tables list with computed availability + coordinates.
+  const tables = useMemo(() => tablesData.map(tbl => ({
+    id: tbl.id,
+    name: tbl.name || 'Masă',
+    seats: tbl.seats || 2,
+    notes: tbl.notes || '',
+    x: typeof tbl.x === 'number' ? tbl.x : null,
+    y: typeof tbl.y === 'number' ? tbl.y : null,
+    status: isTableBooked(tbl) ? 'booked' : 'available'
+  })), [tablesData, reservations, targetDate, time]);
 
   const handleQuantityChange = (productId, change) => {
     setPreOrderQuantities(prev => {
@@ -107,7 +148,7 @@ export default function ReservationsScreen() {
     );
   };
 
-  const handleBook = () => {
+  const handleBook = async () => {
     if (!isLoggedIn) {
       promptAuth(t('needAccountDesc'));
       return;
@@ -118,26 +159,34 @@ export default function ReservationsScreen() {
       return;
     }
 
-    // Compile pre-ordered items
+    // Compile pre-ordered items from the Firestore product list.
     const preOrderItems = Object.keys(preOrderQuantities).map(id => {
-      const prod = PREORDER_PRODUCTS.find(p => p.id === id);
+      const prod = preorderProducts.find(p => p.id === id);
       return {
-        name: prod.name,
+        productId: id,
+        name: prod ? prod.name : '',
         quantity: preOrderQuantities[id],
-        price: prod.price
+        price: prod ? prod.price : 0
       };
     });
 
+    const tableDesc = getTableDesc(selectedTable);
     const newRes = {
       location,
-      table: `${selectedTable.name} (${getTableDesc(selectedTable)})`,
+      locationId: selectedLocationObj?.id || '',
+      tableId: selectedTable.id,
+      table: tableDesc ? `${selectedTable.name} (${tableDesc})` : selectedTable.name,
       date: `${day}, la ora ${time}`,
+      rawDate: targetDate,
+      time,
+      durationMinutes: 90,
       guests,
       preOrder: preOrderItems
     };
 
-    addReservation(newRes);
-    
+    const ok = await addReservation(newRes);
+    if (!ok) return;
+
     // Alert confirmation details
     let summaryText = `${selectedTable.name}\n${day}, ora ${time}\n${guests} persoane`;
     if (preOrderItems.length > 0) {
@@ -162,8 +211,8 @@ export default function ReservationsScreen() {
         {/* Location Picker */}
         <Text style={styles.sectionLabel}>{t('chooseLocation')}</Text>
         <View style={styles.pickerRow}>
-          {['Cluj-Napoca', 'Bistrița', 'Târgu Mureș'].map(loc => (
-            <TouchableOpacity 
+          {locationNames.map(loc => (
+            <TouchableOpacity
               key={loc}
               style={[styles.pickerBtn, location === loc && styles.pickerBtnActive]}
               onPress={() => {
@@ -230,7 +279,7 @@ export default function ReservationsScreen() {
             style={styles.layoutImage} 
             resizeMode="cover"
           />
-          {tables.map(table => {
+          {tables.filter(tbl => tbl.x !== null && tbl.y !== null).map(table => {
             const isBooked = table.status === 'booked';
             const isSelected = selectedTable?.id === table.id;
 
@@ -251,7 +300,7 @@ export default function ReservationsScreen() {
                   isBooked && styles.overlayTextBooked,
                   isSelected && styles.overlayTextSelected
                 ]}>
-                  {table.id.replace(/[A-Z]/g, '')}
+                  {(table.name.match(/\d+/) || [table.name])[0]}
                 </Text>
                 <Text style={[
                   styles.overlaySeats,
@@ -288,6 +337,16 @@ export default function ReservationsScreen() {
       {/* Table Selector */}
       <Text style={styles.sectionTitle}>{t('availableTables')} {location}</Text>
       <View style={styles.tableList}>
+        {tablesLoading && (
+          <View style={styles.emptyReservations}>
+            <ActivityIndicator color={colors.gold} />
+          </View>
+        )}
+        {!tablesLoading && tables.length === 0 && (
+          <View style={styles.emptyReservations}>
+            <Text style={styles.emptyText}>{t('noActiveReservations')}</Text>
+          </View>
+        )}
         {tables.map(table => {
           const isSelected = selectedTable?.id === table.id;
           const isBooked = table.status === 'booked';
@@ -337,7 +396,7 @@ export default function ReservationsScreen() {
           <Text style={styles.preOrderDesc}>{t('preOrderDesc')}</Text>
           
           <View style={styles.preOrderList}>
-            {PREORDER_PRODUCTS.map(product => {
+            {preorderProducts.map(product => {
               const currentQty = preOrderQuantities[product.id] || 0;
               return (
                 <View key={product.id} style={styles.preOrderItemRow}>

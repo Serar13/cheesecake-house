@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { stores } from '../mockData/menuData';
 import { translations } from '../mockData/translations';
+import { subscribeActiveLocations } from '../services/catalog';
 import { auth, db } from '../firebase';
 import { 
   signInWithEmailAndPassword, 
@@ -30,11 +30,14 @@ export const AppProvider = ({ children }) => {
     return savedCart ? JSON.parse(savedCart) : [];
   });
   
+  // Locations are loaded from Firestore. selectedStore may be null until loaded.
+  const [locations, setLocations] = useState([]);
+  const [locationsLoading, setLocationsLoading] = useState(true);
   const [selectedStore, setSelectedStore] = useState(() => {
     const savedStore = localStorage.getItem('cheesecake_store');
-    return savedStore ? JSON.parse(savedStore) : stores[0];
+    return savedStore ? JSON.parse(savedStore) : null;
   });
-  
+
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   // Theme support (light default)
@@ -59,8 +62,27 @@ export const AppProvider = ({ children }) => {
   }, [cart]);
 
   useEffect(() => {
-    localStorage.setItem('cheesecake_store', JSON.stringify(selectedStore));
+    if (selectedStore) {
+      localStorage.setItem('cheesecake_store', JSON.stringify(selectedStore));
+    }
   }, [selectedStore]);
+
+  // Subscribe to active locations from Firestore. Keep the current selection if
+  // it still exists; otherwise default to the first active location.
+  useEffect(() => {
+    const unsubscribe = subscribeActiveLocations((locs) => {
+      setLocations(locs);
+      setLocationsLoading(false);
+      setSelectedStore((prev) => {
+        if (prev && locs.some((l) => l.id === prev.id)) {
+          // Refresh with the latest data for the same id.
+          return locs.find((l) => l.id === prev.id);
+        }
+        return locs.length > 0 ? locs[0] : null;
+      });
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('cheesecake_theme', theme);
@@ -354,6 +376,8 @@ export const AppProvider = ({ children }) => {
       cartTotal,
       selectedStore,
       setSelectedStore,
+      locations,
+      locationsLoading,
       isCartOpen,
       setIsCartOpen,
       theme,

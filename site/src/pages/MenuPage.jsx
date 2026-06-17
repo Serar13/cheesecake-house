@@ -1,14 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
-import { products } from '../mockData/menuData';
+import { getActiveCategories, getActiveProducts } from '../services/catalog';
 import CategoryFilter from '../components/CategoryFilter';
 import ProductGrid from '../components/ProductGrid';
 
 export default function MenuPage() {
   const [activeCategory, setActiveCategory] = useState('all');
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const { t } = useApp();
 
-  // Filter products by active category
+  useEffect(() => {
+    let mounted = true;
+    Promise.all([getActiveCategories(), getActiveProducts()])
+      .then(([cats, prods]) => {
+        if (!mounted) return;
+        setCategories(cats);
+        setProducts(prods);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('MenuPage load failed:', err);
+        if (!mounted) return;
+        setError(true);
+        setLoading(false);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  // Active products are already filtered by the service; apply category filter.
   const filteredProducts = activeCategory === 'all'
     ? products
     : products.filter(p => p.categoryId === activeCategory);
@@ -21,14 +45,26 @@ export default function MenuPage() {
         <div className="gold-divider"></div>
       </div>
 
-      {/* Category filtering */}
-      <CategoryFilter 
-        activeCategory={activeCategory} 
-        onCategoryChange={setActiveCategory} 
+      {/* Category filtering (categories from Firestore) */}
+      <CategoryFilter
+        categories={categories}
+        activeCategory={activeCategory}
+        onCategoryChange={setActiveCategory}
       />
 
-      {/* Product listing grid */}
-      <ProductGrid products={filteredProducts} />
+      {loading ? (
+        <div className="no-products-message">
+          <span className="no-products-icon">⏳</span>
+          <p>Se încarcă meniul...</p>
+        </div>
+      ) : error ? (
+        <div className="no-products-message">
+          <span className="no-products-icon">⚠️</span>
+          <p>Ne pare rău, nu am putut încărca meniul momentan. Te rugăm să încerci din nou.</p>
+        </div>
+      ) : (
+        <ProductGrid products={filteredProducts} />
+      )}
     </section>
   );
 }

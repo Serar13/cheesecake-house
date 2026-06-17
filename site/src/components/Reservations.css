@@ -593,3 +593,44 @@
   }
 }
 
+
+/* Firestore-backed table selection grid */
+.tables-selection-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.tables-selection-grid .table-node {
+  position: static;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 84px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 2px solid var(--color-border, #e0d8cc);
+  background: var(--color-card-bg, #fff);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tables-selection-grid .table-node:hover {
+  border-color: var(--color-gold, #c4a178);
+}
+
+.tables-selection-grid .table-node.selected {
+  border-color: var(--color-gold, #c4a178);
+  background: rgba(196, 161, 120, 0.12);
+}
+
+.tables-selection-grid .table-label-node {
+  font-weight: 600;
+}
+
+.tables-selection-grid .table-seats-count {
+  font-size: 0.8rem;
+  opacity: 0.75;
+}

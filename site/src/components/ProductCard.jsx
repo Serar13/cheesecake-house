@@ -4,17 +4,21 @@ import './ProductCard.css';
 
 export default function ProductCard({ product }) {
   const { addToCart } = useApp();
+  const isUnavailable = product.availability === 'unavailable';
 
   return (
-    <article className="product-card">
+    <article className={`product-card ${isUnavailable ? 'unavailable' : ''}`}>
       <div className="product-image-container">
-        <img 
-          src={product.image} 
-          alt={product.name} 
+        <img
+          src={product.image}
+          alt={product.name}
           className="product-image"
           loading="lazy"
         />
-        <span className="product-weight-badge">{product.weight}</span>
+        {product.weight && <span className="product-weight-badge">{product.weight}</span>}
+        {isUnavailable && (
+          <span className="product-unavailable-badge">Indisponibil</span>
+        )}
       </div>
       
       <div className="product-info">
@@ -31,12 +35,13 @@ export default function ProductCard({ product }) {
             <span className="product-unit">/ {product.unit}</span>
           </div>
           
-          <button 
+          <button
             className="add-to-cart-btn"
             onClick={() => addToCart(product)}
-            aria-label={`Adaugă ${product.name} în coș`}
+            disabled={isUnavailable}
+            aria-label={isUnavailable ? `${product.name} indisponibil` : `Adaugă ${product.name} în coș`}
           >
-            Adaugă ➕
+            {isUnavailable ? 'Indisponibil' : 'Adaugă ➕'}
           </button>
         </div>
       </div>

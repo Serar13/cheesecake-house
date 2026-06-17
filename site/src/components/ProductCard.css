@@ -150,3 +150,32 @@
     font-size: 18px;
   }
 }
+
+/* Unavailable product state */
+.product-card.unavailable {
+  opacity: 0.7;
+}
+
+.product-card.unavailable .product-image {
+  filter: grayscale(0.8);
+}
+
+.product-unavailable-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background-color: #c0392b;
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  z-index: 2;
+}
+
+.add-to-cart-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  filter: grayscale(0.4);
+}

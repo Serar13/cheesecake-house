@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
-import { stores } from '../mockData/menuData';
 import './Header.css';
 
 export default function Header() {
-  const { 
-    cartCount, 
-    selectedStore, 
-    setSelectedStore, 
+  const {
+    cartCount,
+    selectedStore,
+    setSelectedStore,
+    locations,
     setIsCartOpen,
     theme,
     toggleTheme,
@@ -71,23 +71,35 @@ export default function Header() {
               title="Schimbă cofetăria / Change location"
             >
               <span className="inline-pin-icon">📍</span>
-              <span className="inline-store-name">{selectedStore.name.replace('The Cheesecake House ', '')}</span>
+              <span className="inline-store-name">
+                {selectedStore ? selectedStore.name.replace('The Cheesecake House ', '') : 'Locație'}
+              </span>
               <span className="inline-arrow">{dropdownOpen ? '▲' : '▼'}</span>
             </button>
-            
+
             {dropdownOpen && (
               <ul className="store-dropdown-menu-left">
-                {stores.map(store => (
-                  <li key={store.id}>
-                    <button 
-                      className={`dropdown-item ${store.id === selectedStore.id ? 'active' : ''}`}
-                      onClick={() => handleStoreSelect(store)}
-                    >
-                      <strong>{store.name.replace('The Cheesecake House ', '')}</strong>
-                      <span className="dropdown-item-address">{store.address.split(',')[0]}</span>
-                    </button>
+                {locations.length === 0 ? (
+                  <li>
+                    <span className="dropdown-item-address" style={{ padding: '8px 12px', display: 'block' }}>
+                      Se încarcă locațiile...
+                    </span>
                   </li>
-                ))}
+                ) : (
+                  locations.map(store => (
+                    <li key={store.id}>
+                      <button
+                        className={`dropdown-item ${selectedStore && store.id === selectedStore.id ? 'active' : ''}`}
+                        onClick={() => handleStoreSelect(store)}
+                      >
+                        <strong>{store.name.replace('The Cheesecake House ', '')}</strong>
+                        {store.address && (
+                          <span className="dropdown-item-address">{store.address.split(',')[0]}</span>
+                        )}
+                      </button>
+                    </li>
+                  ))
+                )}
               </ul>
             )}
           </div>

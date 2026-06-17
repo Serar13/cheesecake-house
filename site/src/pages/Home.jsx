@@ -1,19 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
-import { products, reviews } from '../mockData/menuData';
+import { getActiveProducts, getApprovedReviews } from '../services/catalog';
 import ProductCard from '../components/ProductCard';
 import './Home.css';
 
 export default function Home() {
   const { t, selectedStore } = useApp();
 
-  // Show only 3 items in the Menu Preview
-  const menuPreviewProducts = products.filter(p => 
-    p.id === 'san-sebastian-classic' || 
-    p.id === 'carrot-cake' || 
-    p.id === 'red-velvet'
-  );
+  const [menuPreviewProducts, setMenuPreviewProducts] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    Promise.all([getActiveProducts(), getApprovedReviews()])
+      .then(([prods, revs]) => {
+        if (!mounted) return;
+        // Prefer featured products for the preview; fall back to the first few.
+        const featured = prods.filter(p => p.featured);
+        const preview = (featured.length > 0 ? featured : prods).slice(0, 3);
+        setMenuPreviewProducts(preview);
+        setReviews(revs);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Home load failed:', err);
+        if (!mounted) return;
+        setLoading(false);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const getHeroImage = (storeId) => {
     switch (storeId) {
@@ -61,9 +80,15 @@ export default function Home() {
           </p>
 
           <div className="teaser-products-preview">
-            {menuPreviewProducts.map(product => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            {loading ? (
+              <p className="teaser-intro">Se încarcă selecția...</p>
+            ) : menuPreviewProducts.length === 0 ? (
+              <p className="teaser-intro">Meniul va fi disponibil în curând.</p>
+            ) : (
+              menuPreviewProducts.map(product => (
+                <ProductCard key={product.id} product={product} />
+              ))
+            )}
           </div>
 
           <div className="teaser-cta-row">
@@ -146,27 +171,29 @@ export default function Home() {
       </section>
 
       {/* 4.8. Horizontal Scrolling Reviews Marquee */}
-      <section className="home-reviews-marquee-section">
-        <div className="marquee-header text-center">
-          <span className="section-subtitle">Părerile Oaspeților 💬</span>
-          <h2 className="section-title">Ce spun clienții noștri</h2>
-          <div className="gold-divider"></div>
-        </div>
-        
-        <div className="marquee-wrapper">
-          <div className="marquee-track">
-            {[...reviews, ...reviews, ...reviews, ...reviews].map((review, idx) => (
-              <div key={`${review.id}-${idx}`} className="marquee-card">
-                <div className="marquee-stars">
-                  {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
-                </div>
-                <p className="marquee-text">"{review.text}"</p>
-                <span className="marquee-author">- {review.name}</span>
-              </div>
-            ))}
+      {reviews.length > 0 && (
+        <section className="home-reviews-marquee-section">
+          <div className="marquee-header text-center">
+            <span className="section-subtitle">Părerile Oaspeților 💬</span>
+            <h2 className="section-title">Ce spun clienții noștri</h2>
+            <div className="gold-divider"></div>
           </div>
-        </div>
-      </section>
+
+          <div className="marquee-wrapper">
+            <div className="marquee-track">
+              {[...reviews, ...reviews, ...reviews, ...reviews].map((review, idx) => (
+                <div key={`${review.id}-${idx}`} className="marquee-card">
+                  <div className="marquee-stars">
+                    {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                  </div>
+                  <p className="marquee-text">"{review.text}"</p>
+                  <span className="marquee-author">- {review.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* 5. Contact Teaser Section */}
       <section className="home-teaser-section alt-bg">
