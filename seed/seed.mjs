@@ -30,7 +30,7 @@ try {
   credential = applicationDefault();
 }
 
-initializeApp({ credential });
+initializeApp({ credential, projectId: process.env.FIREBASE_PROJECT_ID || "chessecakehouse" });
 const db = getFirestore();
 
 async function seedCollection(name, items) {
