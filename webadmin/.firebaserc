@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "chessecakehouse"
+  },
+  "targets": {
+    "chessecakehouse": {
+      "hosting": {
+        "admin": [
+          "chessecakehouse-admin"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "name": "cheesecake-house-mobile",
+    "slug": "cheesecake-house-mobile",
+    "version": "1.0.0",
+    "sdkVersion": "51.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.rares.cheesecake-house-mobile",
+      "infoPlist": {
+        "NSLocalNetworkUsageDescription": "Allow this app to connect to the Metro development server on your local network."
+      }
+    }
+  }
+}

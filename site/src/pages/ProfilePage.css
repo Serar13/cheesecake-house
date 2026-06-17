@@ -1,0 +1,600 @@
+.profile-page-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 130px 24px 60px 24px; /* Increased top padding to prevent fixed header overlap and give premium breathing room */
+}
+
+.profile-page-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-page-title {
+  font-size: 32px;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--color-text);
+}
+
+.gold-divider {
+  width: 60px;
+  height: 2px;
+  background-color: var(--color-gold);
+  margin: 0 auto 32px auto;
+}
+
+.profile-section-heading {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+  margin-top: 24px;
+  margin-bottom: 16px;
+  text-align: left;
+  width: 100%;
+}
+
+/* Guest Locked View */
+.profile-locked-card {
+  width: 100%;
+  max-width: 500px;
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.locked-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.locked-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.locked-desc {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.profile-connect-btn {
+  padding: 14px 28px;
+  background-color: var(--color-gold);
+  color: #fff;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(196, 161, 120, 0.3);
+  transition: all 0.2s ease;
+}
+
+.profile-connect-btn:hover {
+  background-color: var(--color-gold-hover);
+  transform: translateY(-1px);
+}
+
+/* Layout Grid */
+.profile-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .profile-layout-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+.profile-column {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Profile Details Card */
+.profile-details-card {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+}
+
+.profile-avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  text-align: left;
+}
+
+.profile-avatar-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: var(--color-gold-muted);
+  border: 2px solid var(--color-gold);
+  color: var(--color-gold);
+  font-weight: 700;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-info-details {
+  flex: 1;
+}
+
+.user-name {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  color: var(--color-text);
+}
+
+.user-email {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0 0 2px 0;
+}
+
+.user-phone {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.user-edit-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.user-edit-btn:hover {
+  background-color: var(--color-border);
+}
+
+.profile-details-divider {
+  height: 1px;
+  background-color: var(--color-border);
+  width: 100%;
+}
+
+.profile-loyalty-row {
+  display: flex;
+  justify-content: space-around;
+  gap: 12px;
+}
+
+.loyalty-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-gold);
+}
+
+.stat-label {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+/* Wallet Card (Credit Card style) */
+.profile-wallet-display {
+  background: linear-gradient(135deg, #1b1713 0%, #2d241c 100%);
+  border: 1px solid rgba(196, 161, 120, 0.3);
+  border-radius: 20px;
+  padding: 24px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  text-align: left;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+:root.dark-theme .profile-wallet-display {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 12px rgba(196, 161, 120, 0.15);
+}
+
+.wallet-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wallet-card-brand {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.wallet-card-type {
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: rgba(196, 161, 120, 0.2);
+  color: #c4a178;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.wallet-card-balance {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.balance-value {
+  font-size: 28px;
+  font-weight: 700;
+  font-family: var(--font-serif);
+  color: #f6f2ee;
+}
+
+.balance-label {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.65);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.wallet-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 2px;
+}
+
+.wallet-card-nfc {
+  font-size: 16px;
+}
+
+/* Top Up Buttons */
+.topup-options-row {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.wallet-topup-btn {
+  flex: 1;
+  padding: 12px;
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-weight: 700;
+  font-size: 13px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.wallet-topup-btn:hover {
+  background-color: var(--color-gold-muted);
+  border-color: var(--color-gold);
+  color: var(--color-gold);
+  transform: translateY(-1px);
+}
+
+/* Vouchers */
+.birthday-voucher-box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: var(--color-card-bg);
+  border: 1px dashed var(--color-gold);
+  border-radius: 20px;
+  padding: 20px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02);
+}
+
+.birthday-voucher-box:hover {
+  background-color: var(--color-gold-muted);
+  border-style: solid;
+}
+
+.voucher-gift-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background-color: var(--color-gold-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.voucher-text-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.voucher-name-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.voucher-desc-text {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.voucher-action-btn {
+  padding: 8px 16px;
+  background-color: var(--color-gold);
+  color: #fff;
+  border: none;
+  font-weight: 700;
+  font-size: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.vouchers-empty-state {
+  padding: 24px;
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02);
+}
+
+/* Account Actions */
+.account-actions-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02);
+}
+
+.account-logout-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 50px;
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.account-logout-btn:hover {
+  background-color: var(--color-border);
+}
+
+.account-delete-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 50px;
+  border: none;
+  background-color: transparent;
+  color: #dc3545;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.account-delete-btn:hover {
+  text-decoration: underline;
+}
+
+.account-delete-confirm-box {
+  background-color: rgba(220, 53, 69, 0.04);
+  border: 1px solid rgba(220, 53, 69, 0.15);
+  border-radius: 16px;
+  padding: 20px;
+  font-size: 13px;
+  color: #dc3545;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.account-delete-confirm-box p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.confirm-buttons-row {
+  display: flex;
+  gap: 16px;
+}
+
+.delete-yes-btn {
+  flex: 1;
+  padding: 10px;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.delete-no-btn {
+  flex: 1;
+  padding: 10px;
+  background-color: var(--color-border);
+  color: var(--color-text);
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* Edit Profile Card */
+.profile-edit-card {
+  width: 100%;
+  max-width: 500px;
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profile-page-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.profile-page-field label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.profile-page-field input {
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+}
+
+.profile-page-field input:focus {
+  outline: none;
+  border-color: var(--color-gold);
+}
+
+.profile-edit-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.profile-save-button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 50px;
+  background-color: var(--color-gold);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(196, 161, 120, 0.3);
+  transition: all 0.2s ease;
+}
+
+.profile-save-button:hover {
+  background-color: var(--color-gold-hover);
+  transform: translateY(-1px);
+}
+
+.profile-cancel-button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 50px;
+  background-color: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.profile-cancel-button:hover {
+  background-color: var(--color-border);
+}
+
+.profile-page-error {
+  background-color: rgba(220, 53, 69, 0.08);
+  color: #dc3545;
+  border: 1px solid rgba(220, 53, 69, 0.15);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Loyalty app download nudge style */
+.profile-loyalty-nudge-box {
+  background-color: var(--color-gold-muted);
+  border: 1px solid rgba(196, 161, 120, 0.2);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  text-align: left;
+}
+
+.nudge-icon {
+  font-size: 20px;
+}
+
+.nudge-text {
+  font-size: 11.5px;
+  color: var(--color-text-muted);
+  margin: 0;
+  line-height: 1.4;
+}

@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+:root {
+  /* Color Palette Specs - Premium Light Creamy Theme */
+  --color-gold: #c4a178;
+  --color-gold-hover: #b08d64;
+  --color-gold-muted: rgba(196, 161, 120, 0.12);
+  
+  --color-bg-light: #fefdfb;
+  --color-bg-dark: #fefdfb; /* Set dark to light to avoid dark mode overrides */
+  
+  --color-card-bg-light: #ffffff;
+  --color-card-bg-dark: #ffffff;
+  
+  --color-text-light: #2d241c;
+  --color-text-dark: #2d241c;
+  
+  --color-text-muted-light: #7c7063;
+  --color-text-muted-dark: #7c7063;
+  
+  --color-border-light: #f1eae0;
+  --color-border-dark: #f1eae0;
+  
+  --color-accent-gold: #c4a178;
+  
+  /* Standard custom properties */
+  --color-bg: var(--color-bg-light);
+  --color-card-bg: var(--color-card-bg-light);
+  --color-text: var(--color-text-light);
+  --color-text-muted: var(--color-text-muted-light);
+  --color-border: var(--color-border-light);
+  --logo-filter: none;
+
+  /* Font Families */
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, Cambria, 'Times New Roman', Times, serif;
+
+  /* Typography scale */
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color: var(--color-text);
+  background-color: var(--color-bg);
+
+  /* Native UI scheme adaptation */
+  color-scheme: light;
+  accent-color: var(--color-gold);
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Dark theme variables override */
+:root.dark-theme {
+  --color-bg-light: #12100e;
+  --color-card-bg-light: #1b1713;
+  --color-text-light: #f6f2ee;
+  --color-text-muted-light: #aaa093;
+  --color-border-light: #2d241c;
+  --color-gold-muted: rgba(196, 161, 120, 0.15);
+  
+  --color-bg: var(--color-bg-light);
+  --color-card-bg: var(--color-card-bg-light);
+  --color-text: var(--color-text-light);
+  --color-text-muted: var(--color-text-muted-light);
+  --color-border: var(--color-border-light);
+  --logo-filter: brightness(0) invert(1);
+
+  color-scheme: dark;
+}
+
+/* Custom Scrollbar */
+:root {
+  --color-scrollbar-track: var(--color-bg);
+  --color-scrollbar-thumb: rgba(196, 161, 120, 0.25);
+  
+  scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-track);
+  scrollbar-width: thin;
+}
+
+/* Scrollbar fallback block for older browsers */
+@supports not (scrollbar-color: auto) {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-gold-hover);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-bg);
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Premium Typography classes */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+/* Standard button transitions & micro-interactions */
+button {
+  font-family: var(--font-sans);
+  border: none;
+  background: none;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dynamic glow animation */
+@keyframes soft-glow {
+  0% {
+    box-shadow: 0 0 5px var(--color-gold-muted);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(196, 161, 120, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 5px var(--color-gold-muted);
+  }
+}
+
+/* Scroll Snap containers and modern transitions */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
