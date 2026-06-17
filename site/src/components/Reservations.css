@@ -5,7 +5,7 @@
 }
 
 .reservations-container {
-  max-width: 800px;
+  max-width: 1120px;
   margin: 0 auto;
 }
 
@@ -28,7 +28,7 @@
 }
 
 .reservations-card-wrapper {
-  max-width: 680px;
+  max-width: 860px;
   margin: 0 auto;
 }
 
@@ -351,8 +351,8 @@
 /* Floor Plan Seating Map Wrapper */
 .floor-plan-map {
   width: 100%;
-  max-width: 500px;
-  aspect-ratio: 1 / 1;
+  max-width: 760px;
+  aspect-ratio: 16 / 10;
   background-color: var(--color-card-bg);
   border: 1px solid var(--color-border);
   border-radius: 24px;
@@ -360,9 +360,19 @@
   overflow: hidden;
   margin: 20px auto;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  background-size: 100% 100%;
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.location-map-cluj-napoca,
+.location-map-bistrita {
+  aspect-ratio: 16 / 10;
+}
+
+.location-map-tg-mures {
+  aspect-ratio: 1 / 1;
+  max-width: 640px;
 }
 
 /* Dark theme specific night-lighting filter for the 3D map */
@@ -591,46 +601,4 @@
     top: -4px;
     right: -4px;
   }
-}
-
-
-/* Firestore-backed table selection grid */
-.tables-selection-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 12px;
-}
-
-.tables-selection-grid .table-node {
-  position: static;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-width: 84px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  border: 2px solid var(--color-border, #e0d8cc);
-  background: var(--color-card-bg, #fff);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.tables-selection-grid .table-node:hover {
-  border-color: var(--color-gold, #c4a178);
-}
-
-.tables-selection-grid .table-node.selected {
-  border-color: var(--color-gold, #c4a178);
-  background: rgba(196, 161, 120, 0.12);
-}
-
-.tables-selection-grid .table-label-node {
-  font-weight: 600;
-}
-
-.tables-selection-grid .table-seats-count {
-  font-size: 0.8rem;
-  opacity: 0.75;
 }

@@ -10,6 +10,12 @@ import './Reservations.css';
 
 const RESERVATION_DURATION_MINUTES = 90;
 
+const LOCATION_MAP_IMAGES = {
+  'cluj-napoca': '/cluj_layout_3d.png',
+  bistrita: '/bistrita_layout_3d.png',
+  'tg-mures': '/tg_mures_floorplan.png',
+};
+
 export default function Reservations() {
   const { language, currentUser, setShowAuthModal } = useApp();
   const isRo = language === 'ro';
@@ -96,6 +102,7 @@ export default function Reservations() {
 
   const activeLocation = locations.find((l) => l.id === selectedLocId) || null;
   const selectedTableObj = tables.find((t) => t.id === selectedTableId) || null;
+  const activeMapImage = activeLocation ? LOCATION_MAP_IMAGES[activeLocation.id] : null;
 
   const handleTableClick = (table) => {
     setSelectedTableId((prev) => (prev === table.id ? null : table.id));
@@ -348,14 +355,20 @@ export default function Reservations() {
                   ) : tables.length === 0 ? (
                     <p>{isRo ? 'Nicio masă disponibilă pentru această locație.' : 'No tables available for this location.'}</p>
                   ) : (
-                    <div className="tables-selection-grid">
+                    <div
+                      className={`floor-plan-map location-map-${activeLocation?.id || 'default'}`}
+                      style={activeMapImage ? { backgroundImage: `url(${activeMapImage})` } : undefined}
+                    >
                       {tables.map((table) => {
                         const isSelected = selectedTableId === table.id;
+                        const x = Number(table.x ?? 50);
+                        const y = Number(table.y ?? 50);
                         return (
                           <button
                             key={table.id}
                             type="button"
                             className={`table-node ${isSelected ? 'selected' : ''}`}
+                            style={{ left: `${x}%`, top: `${y}%` }}
                             onClick={() => handleTableClick(table)}
                             title={`${table.name}${table.seats ? ` - ${table.seats} ${isRo ? 'locuri' : 'seats'}` : ''}`}
                           >
@@ -367,6 +380,13 @@ export default function Reservations() {
                           </button>
                         );
                       })}
+                    </div>
+                  )}
+
+                  {tables.length > 0 && !tablesLoading && (
+                    <div className="map-legend">
+                      <span className="legend-item"><span className="legend-color free"></span>{isRo ? 'Disponibilă' : 'Available'}</span>
+                      <span className="legend-item"><span className="legend-color selected"></span>{isRo ? 'Selectată' : 'Selected'}</span>
                     </div>
                   )}
 
