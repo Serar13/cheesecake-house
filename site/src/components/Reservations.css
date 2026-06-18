@@ -351,8 +351,12 @@
 /* Floor Plan Seating Map Wrapper */
 .floor-plan-map {
   width: 100%;
-  max-width: 760px;
-  aspect-ratio: 16 / 10;
+  max-width: 640px;
+  /* Source floor-plan renders are square (1024x1024). The container must
+     match that ratio so `background-size: contain` fills it edge-to-edge
+     with no letterboxing — otherwise the percentage-positioned table nodes
+     drift off the rendered tables. */
+  aspect-ratio: 1 / 1;
   box-sizing: border-box;
   background-color: var(--color-card-bg);
   border: 1px solid var(--color-border);
@@ -366,14 +370,11 @@
   background-position: center;
 }
 
+/* All location renders share the same square 1:1 source ratio. */
 .location-map-cluj-napoca,
-.location-map-bistrita {
-  aspect-ratio: 16 / 10;
-}
-
+.location-map-bistrita,
 .location-map-tg-mures {
   aspect-ratio: 1 / 1;
-  max-width: 640px;
 }
 
 /* Dark theme specific night-lighting filter for the 3D map */
