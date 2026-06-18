@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { getActiveLocations } from '../services/catalog';
 import {
-  getTablesByLocation,
   createReservation,
   checkReservationConflict,
 } from '../services/submissions';
@@ -16,15 +15,55 @@ const LOCATION_MAP_IMAGES = {
   'tg-mures': '/tg_mures_floorplan.png',
 };
 
+/**
+ * Static floor-plan table definitions — positions (x%, y%) are calibrated
+ * pixel-by-pixel against each location's rendered floor plan image.
+ * Update here if the floor plan images ever change.
+ */
+const STATIC_FLOOR_PLANS = {
+  'cluj-napoca': [
+    { id: 'cluj-1',  name: 'Masa 1',  seats: 2, x: 16, y: 47 },
+    { id: 'cluj-2',  name: 'Masa 2',  seats: 2, x: 16, y: 59 },
+    { id: 'cluj-3',  name: 'Masa 3',  seats: 2, x: 27, y: 59 },
+    { id: 'cluj-4',  name: 'Masa 4',  seats: 4, x: 16, y: 71 },
+    { id: 'cluj-5',  name: 'Masa 5',  seats: 4, x: 27, y: 71 },
+    { id: 'cluj-6',  name: 'Masa 6',  seats: 2, x: 16, y: 82 },
+    { id: 'cluj-7',  name: 'Masa 7',  seats: 2, x: 27, y: 82 },
+    { id: 'cluj-8',  name: 'Masa 8',  seats: 4, x: 40, y: 82 },
+    { id: 'cluj-9',  name: 'Masa 9',  seats: 4, x: 71, y: 30 },
+    { id: 'cluj-10', name: 'Masa 10', seats: 4, x: 71, y: 52 },
+    { id: 'cluj-11', name: 'Masa 11', seats: 4, x: 71, y: 74 },
+  ],
+  bistrita: [
+    { id: 'bistrita-1', name: 'Masa 1', seats: 2, x: 22, y: 35 },
+    { id: 'bistrita-2', name: 'Masa 2', seats: 2, x: 37, y: 35 },
+    { id: 'bistrita-3', name: 'Masa 3', seats: 2, x: 52, y: 35 },
+    { id: 'bistrita-4', name: 'Masa 4', seats: 4, x: 64, y: 35 },
+    { id: 'bistrita-5', name: 'Masa 5', seats: 2, x: 24, y: 52 },
+    { id: 'bistrita-6', name: 'Masa 6', seats: 4, x: 40, y: 52 },
+    { id: 'bistrita-7', name: 'Masa 7', seats: 2, x: 19, y: 72 },
+    { id: 'bistrita-8', name: 'Masa 8', seats: 4, x: 33, y: 72 },
+    { id: 'bistrita-9', name: 'Masa 9', seats: 4, x: 79, y: 55 },
+  ],
+  'tg-mures': [
+    { id: 'mures-1', name: 'Masa 1', seats: 2, x: 18, y: 80 },
+    { id: 'mures-2', name: 'Masa 2', seats: 4, x: 38, y: 38 },
+    { id: 'mures-3', name: 'Masa 3', seats: 2, x: 57, y: 35 },
+    { id: 'mures-4', name: 'Masa 4', seats: 4, x: 38, y: 62 },
+    { id: 'mures-5', name: 'Masa 5', seats: 2, x: 56, y: 62 },
+    { id: 'mures-6', name: 'Masa 6', seats: 2, x: 77, y: 31 },
+    { id: 'mures-7', name: 'Masa 7', seats: 4, x: 88, y: 48 },
+    { id: 'mures-8', name: 'Masa 8', seats: 4, x: 77, y: 73 },
+  ],
+};
+
 export default function Reservations() {
   const { language, currentUser, setShowAuthModal } = useApp();
   const isRo = language === 'ro';
 
-  // Locations + tables loaded from Firestore.
+  // Locations loaded from Firestore (name, phone, address only).
   const [locations, setLocations] = useState([]);
   const [locationsLoading, setLocationsLoading] = useState(true);
-  const [tables, setTables] = useState([]);
-  const [tablesLoading, setTablesLoading] = useState(false);
 
   const [selectedLocId, setSelectedLocId] = useState('');
   const [formName, setFormName] = useState('');
@@ -54,7 +93,7 @@ export default function Reservations() {
     }
   }, [currentUser]);
 
-  // Load active locations.
+  // Load active locations (for display info only — table positions are static).
   useEffect(() => {
     let mounted = true;
     getActiveLocations()
@@ -69,44 +108,23 @@ export default function Reservations() {
         if (!mounted) return;
         setLocationsLoading(false);
       });
-    return () => {
-      mounted = false;
-    };
+    return () => { mounted = false; };
   }, []);
 
-  // Load tables when the location changes.
-  useEffect(() => {
-    if (!selectedLocId) {
-      setTables([]);
-      return;
-    }
-    let mounted = true;
-    setTablesLoading(true);
-    setSelectedTableId(null);
-    getTablesByLocation(selectedLocId)
-      .then((tbls) => {
-        if (!mounted) return;
-        setTables(tbls);
-        setTablesLoading(false);
-      })
-      .catch((err) => {
-        console.error('Reservations tables load failed:', err);
-        if (!mounted) return;
-        setTables([]);
-        setTablesLoading(false);
-      });
-    return () => {
-      mounted = false;
-    };
-  }, [selectedLocId]);
+  // Reset selected table when location changes.
+  useEffect(() => { setSelectedTableId(null); }, [selectedLocId]);
+
+  // Tables come from the static floor-plan config — no Firestore query needed.
+  const tables = STATIC_FLOOR_PLANS[selectedLocId] || [];
 
   const activeLocation = locations.find((l) => l.id === selectedLocId) || null;
   const selectedTableObj = tables.find((t) => t.id === selectedTableId) || null;
-  const activeMapImage = activeLocation ? LOCATION_MAP_IMAGES[activeLocation.id] : null;
+  const activeMapImage = selectedLocId ? LOCATION_MAP_IMAGES[selectedLocId] : null;
 
   const handleTableClick = (table) => {
     setSelectedTableId((prev) => (prev === table.id ? null : table.id));
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -339,7 +357,7 @@ export default function Reservations() {
                   </div>
                 </div>
 
-                {/* Table selection (from Firestore) */}
+                {/* Static floor-plan table selection */}
                 <div className="seating-map-group">
                   <label className="map-group-label">
                     🪑 {isRo ? 'Selectează Masa' : 'Select a Table'}
@@ -350,13 +368,11 @@ export default function Reservations() {
                       : 'Pick your preferred table for this reservation.'}
                   </p>
 
-                  {tablesLoading ? (
-                    <p>{isRo ? 'Se încarcă mesele...' : 'Loading tables...'}</p>
-                  ) : tables.length === 0 ? (
+                  {tables.length === 0 ? (
                     <p>{isRo ? 'Nicio masă disponibilă pentru această locație.' : 'No tables available for this location.'}</p>
                   ) : (
                     <div
-                      className={`floor-plan-map location-map-${activeLocation?.id || 'default'}`}
+                      className={`floor-plan-map location-map-${selectedLocId || 'default'}`}
                       style={activeMapImage ? { backgroundImage: `url(${activeMapImage})` } : undefined}
                     >
                       {tables.map((table) => {
@@ -383,7 +399,7 @@ export default function Reservations() {
                     </div>
                   )}
 
-                  {tables.length > 0 && !tablesLoading && (
+                  {tables.length > 0 && (
                     <div className="map-legend">
                       <span className="legend-item"><span className="legend-color free"></span>{isRo ? 'Disponibilă' : 'Available'}</span>
                       <span className="legend-item"><span className="legend-color selected"></span>{isRo ? 'Selectată' : 'Selected'}</span>
