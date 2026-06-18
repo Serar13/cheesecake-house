@@ -13,6 +13,8 @@ tables, locations, event requests, reviews and loyalty are managed from the
 - `site` — Public customer website → Firebase Hosting (`chessecakehouse`).
 - `webadmin` — Admin dashboard → Firebase Hosting (`chessecakehouse-admin`).
 - `seed` — One-off Firestore seeding script + canonical seed data.
+- `landingpage-proposal` — Standalone React/Vite landing-page concept for
+  design iteration and review.
 
 ## Live URLs
 
@@ -61,6 +63,15 @@ cd webadmin
 npm install
 npm run dev
 npm run build           # production build → dist/
+```
+
+### Landing page proposal
+
+```bash
+cd landingpage-proposal
+npm install
+npm run dev
+npm run build
 ```
 
 ---
