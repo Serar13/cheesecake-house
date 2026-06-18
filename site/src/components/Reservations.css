@@ -1,5 +1,5 @@
 .reservations-section {
-  padding: 100px 24px;
+  padding: 80px 24px;
   background-color: var(--color-bg);
   border-bottom: 1px solid var(--color-border);
 }
@@ -14,7 +14,7 @@
 }
 
 .reservations-main-title {
-  font-size: 48px;
+  font-size: 42px;
   font-weight: 700;
   margin-bottom: 24px;
 }
@@ -37,7 +37,7 @@
   border: 1px solid var(--color-border);
   border-radius: 24px;
   padding: 48px;
-  box-shadow: 0 10px 45px rgba(0,0,0,0.02);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.03);
 }
 
 /* Meta Top Row - Selector + Phone banner */
@@ -353,6 +353,7 @@
   width: 100%;
   max-width: 760px;
   aspect-ratio: 16 / 10;
+  box-sizing: border-box;
   background-color: var(--color-card-bg);
   border: 1px solid var(--color-border);
   border-radius: 24px;
@@ -600,5 +601,25 @@
     font-size: 8px;
     top: -4px;
     right: -4px;
+  }
+}
+
+@media (max-width: 520px) {
+  .reservations-section { padding: 60px 16px; }
+  .reservations-card { padding: 24px 16px; border-radius: 16px; }
+  .reservations-main-title { font-size: 30px; }
+  .reservations-header { margin-bottom: 36px; }
+  .reservations-intro { font-size: 14px; }
+  .seating-map-group { padding: 16px; }
+  .floor-plan-map { margin: 12px auto; border-radius: 16px; }
+  .table-node {
+    width: 34px;
+    height: 34px;
+  }
+  .table-label-node {
+    font-size: 8px;
+  }
+  .table-seats-count {
+    font-size: 6px;
   }
 }
