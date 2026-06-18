@@ -757,6 +757,223 @@ p {
   color: var(--color-primary);
 }
 
+.custom-package-button {
+  width: 100%;
+  margin-top: 16px;
+  border: 1px solid var(--color-primary);
+  border-radius: 10px;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  padding: 11px 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.custom-package-button:hover {
+  transform: translateY(-2px);
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+.custom-configurator {
+  margin-top: 28px;
+  padding: 34px;
+  border: 1px solid var(--color-primary);
+  border-radius: 18px;
+  background: linear-gradient(145deg, #ffffff, #f7faff);
+  box-shadow: 0 24px 60px rgba(59, 130, 246, 0.12);
+  animation: customConfiguratorReveal 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes customConfiguratorReveal {
+  from { opacity: 0; transform: translateY(-12px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.custom-configurator-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.custom-configurator-kicker {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.custom-configurator-head h3 {
+  margin: 0 0 6px;
+  font-size: 26px;
+}
+
+.custom-configurator-head p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.custom-budget-value {
+  min-width: 150px;
+  text-align: right;
+}
+
+.custom-budget-value strong {
+  display: block;
+  color: var(--color-primary);
+  font-size: 32px;
+  line-height: 1;
+}
+
+.custom-budget-value span {
+  color: var(--color-text-light);
+  font-size: 13px;
+}
+
+.custom-slider-label {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--color-text-main);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.custom-budget-slider {
+  width: 100%;
+  height: 8px;
+  border-radius: 99px;
+  appearance: none;
+  background: linear-gradient(to right, var(--color-primary) 0 var(--slider-progress), #dbe5f3 var(--slider-progress) 100%);
+  outline: none;
+  cursor: pointer;
+}
+
+.custom-budget-slider::-webkit-slider-thumb {
+  width: 24px;
+  height: 24px;
+  appearance: none;
+  border: 4px solid #ffffff;
+  border-radius: 50%;
+  background: var(--color-primary);
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+}
+
+.custom-budget-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 4px solid #ffffff;
+  border-radius: 50%;
+  background: var(--color-primary);
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+}
+
+.custom-slider-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  color: var(--color-text-light);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.custom-deliverables-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 28px 0 20px;
+}
+
+.custom-deliverables-grid > div {
+  min-height: 96px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.custom-deliverables-grid strong {
+  color: var(--color-text-main);
+  font-size: 28px;
+  line-height: 1;
+}
+
+.custom-deliverables-grid span {
+  margin-top: 7px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.custom-plan-notes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.custom-plan-notes span {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--color-text-muted);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.custom-plan-notes svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-success);
+}
+
+.custom-configurator-foot {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.custom-configurator-foot p {
+  margin: 0;
+  color: var(--color-text-light);
+  font-size: 12px;
+}
+
+.custom-configurator-cta {
+  flex-shrink: 0;
+  border-radius: 9px;
+  background: var(--color-primary);
+  color: #ffffff;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.custom-configurator-cta:hover {
+  color: #ffffff;
+  text-decoration: none;
+  background: var(--color-primary-hover);
+}
+
 /* Accelerator Details Big Card */
 .accelerator-focus-section {
   margin-bottom: 80px;
@@ -816,6 +1033,25 @@ p {
   color: var(--color-text-muted);
   max-width: 700px;
   margin-bottom: 40px;
+}
+
+.ownership-note {
+  max-width: 780px;
+  margin: -18px 0 36px;
+  padding: 12px 14px;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  background: #f0fdf4;
+  color: #166534;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ownership-note svg {
+  flex-shrink: 0;
 }
 
 .steps-list {
@@ -989,6 +1225,15 @@ p {
   .btn { width: 100%; }
   .nav-flex { flex-direction: column; gap: 16px; text-align: center; }
   .step-row { flex-direction: column; gap: 12px; }
+  .custom-configurator { padding: 22px 16px; }
+  .custom-configurator-head { flex-direction: column; gap: 14px; }
+  .custom-budget-value { min-width: 0; text-align: left; }
+  .custom-budget-value strong { font-size: 28px; }
+  .custom-deliverables-grid { grid-template-columns: repeat(2, 1fr); }
+  .custom-plan-notes { grid-template-columns: 1fr; }
+  .custom-configurator-foot { flex-direction: column; align-items: stretch; }
+  .custom-configurator-cta { text-align: center; }
+  .ownership-note { align-items: flex-start; }
 }
 
 /* Phone Mockup Lockscreen Simulator */

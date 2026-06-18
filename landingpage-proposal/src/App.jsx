@@ -8,9 +8,24 @@ import {
   Zap,
   CheckCircle2,
   ExternalLink,
-  RotateCcw
+  RotateCcw,
+  SlidersHorizontal,
+  BarChart3
 } from 'lucide-react';
 import './App.css';
+
+function getCustomPlan(budget) {
+  if (budget < 750) {
+    return { posts: 8, stories: 12, reels: 2, platforms: 2, shoots: 0, support: 'Moderare de bază' };
+  }
+  if (budget < 1000) {
+    return { posts: 12, stories: 20, reels: 4, platforms: 2, shoots: 1, support: 'Community management 3 zile / săptămână' };
+  }
+  if (budget < 1500) {
+    return { posts: 24, stories: 35, reels: 8, platforms: 3, shoots: 1, support: 'Community management zilnic' };
+  }
+  return { posts: 30, stories: 50, reels: 12, platforms: 3, shoots: 2, support: 'Community management prioritar' };
+}
 
 export default function App() {
   // Package Selection:
@@ -18,6 +33,9 @@ export default function App() {
   // - 'lite': Pachet Lite Accelerator (750 €/lună)
   // - 'launch': Pachet Launch Accelerator (1000 €/lună, Recomandat)
   const [activePackage, setActivePackage] = useState('launch');
+  const [customOpen, setCustomOpen] = useState(false);
+  const [customBudget, setCustomBudget] = useState(1000);
+  const customPlan = getCustomPlan(customBudget);
 
   // URL-ul site-ului demo creat deja pentru client (inlocuieste cu link-ul tau real)
   const demoSiteUrl = "https://cheesecakehouse.ro";
@@ -319,8 +337,12 @@ export default function App() {
                   <span>Panou de administrare Firestore (produse, stocuri, rezervări)</span>
                 </li>
                 <li>
+                  <BarChart3 size={16} className="check-icon" />
+                  <span>Dashboard KPI: vânzări, comenzi, rezervări și rezultate pe surse</span>
+                </li>
+                <li>
                   <Check size={16} className="check-icon" />
-                  <span>Configurat SEO complet & viteză de încărcare ultra-rapidă</span>
+                  <span>Configurare SEO și performanță optimizată pentru mobil</span>
                 </li>
                 <li>
                   <Check size={16} className="check-icon" />
@@ -357,7 +379,7 @@ export default function App() {
               <div className="card-header-icon">
                 <Smartphone size={24} />
               </div>
-              <h3>Aplicație Mobilă Nativă (iOS & Android)</h3>
+              <h3>Aplicație Mobilă iOS & Android</h3>
               <p className="card-desc">Aplicație mobilă de fidelitate, portofel digital și notificări push directe.</p>
               
               <ul className="features-list">
@@ -392,7 +414,7 @@ export default function App() {
                 )}
               </div>
               <p style={{ fontSize: '13px', color: '#64748b', marginTop: '6px' }}>
-                {activePackage === 'individual' ? "Preț standard pentru dezvoltare aplicație dedicată." : activePackage === 'lite' ? "Primești aplicația mobilă la preț redus de partener." : "Primești site-ul web inclus + aplicația mobilă la preț redus."}
+                {activePackage === 'individual' ? "Preț standard pentru dezvoltare aplicație dedicată. Codul și baza de date rămân ale clientului." : activePackage === 'lite' ? "Primești aplicația mobilă la preț redus de partener, cu acces la cod și baza de date." : "Primești site-ul web inclus + aplicația mobilă la preț redus, cu acces complet la cod, GitHub și Firebase."}
               </p>
             </div>
           </div>
@@ -562,7 +584,7 @@ export default function App() {
                 lineHeight: '1.5',
                 color: 'var(--color-text-muted)'
               }}>
-                <strong>💡 De ce este tare:</strong> Îi face pe clienți să realizeze puterea marketing-ului direct. Mesajele ajung instantaneu, au o rată de deschidere de <strong>98%</strong> și costă <strong>0 €</strong> (fără intermediari, fără algoritmi social media).
+                <strong>💡 De ce este tare:</strong> Creează un canal direct și măsurabil către clienți. Mesajele ajung instantaneu, fără algoritmii rețelelor sociale și fără cost per mesaj în infrastructura inclusă.
               </div>
               
               <div className="sneak-peek-features">
@@ -633,6 +655,10 @@ export default function App() {
                     <Check size={16} />
                     <span>Recomandări tematice de content lunar</span>
                   </li>
+                  <li>
+                    <BarChart3 size={16} />
+                    <span>Raport lunar KPI și rezultate integrate în panoul admin</span>
+                  </li>
                 </ul>
               </div>
               
@@ -668,11 +694,15 @@ export default function App() {
                     <Check size={16} />
                     <span><strong>PLUS: Apariții personale ale Alinei în videoclipuri</strong></span>
                   </li>
+                  <li>
+                    <BarChart3 size={16} />
+                    <span>Raport lunar KPI: reach, engagement, trafic, comenzi și rezervări</span>
+                  </li>
                 </ul>
               </div>
               
               <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '20px', fontSize: '13.5px', color: 'var(--color-primary)' }}>
-                Focus masiv pe video marketing (Reels/TikTok) cu rezultate directe în creșterea vânzărilor fizice și online.
+                Focus pe video marketing (Reels/TikTok), trafic și rezultate măsurabile în locații și online.
               </div>
             </div>
 
@@ -705,10 +735,69 @@ export default function App() {
               </div>
               
               <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '20px', fontSize: '13.5px', color: '#64748b' }}>
-                Doriți o structură diferită sau un volum mai mic? Discutăm detaliile și negociem un preț personalizat.
+                <p>Doriți o structură diferită? Simulați instant ce putem livra pentru bugetul dorit.</p>
+                <button
+                  type="button"
+                  className="custom-package-button"
+                  onClick={() => setCustomOpen((open) => !open)}
+                  aria-expanded={customOpen}
+                >
+                  <SlidersHorizontal size={16} />
+                  {customOpen ? 'Închide configuratorul' : 'Configurează pachetul'}
+                </button>
               </div>
             </div>
           </div>
+
+          {customOpen && (
+            <div className="custom-configurator">
+              <div className="custom-configurator-head">
+                <div>
+                  <span className="custom-configurator-kicker">Pachet construit pe bugetul tău</span>
+                  <h3>Configurator Social Media</h3>
+                  <p>Trage sliderul și vezi imediat volumul lunar recomandat.</p>
+                </div>
+                <div className="custom-budget-value">
+                  <strong>{customBudget.toLocaleString('ro-RO')} €</strong>
+                  <span>/ lună</span>
+                </div>
+              </div>
+
+              <label className="custom-slider-label" htmlFor="custom-budget">
+                Buget lunar pentru servicii de conținut și administrare
+              </label>
+              <input
+                id="custom-budget"
+                className="custom-budget-slider"
+                type="range"
+                min="500"
+                max="2000"
+                step="50"
+                value={customBudget}
+                onChange={(event) => setCustomBudget(Number(event.target.value))}
+                style={{ '--slider-progress': `${((customBudget - 500) / 1500) * 100}%` }}
+              />
+              <div className="custom-slider-scale"><span>500 €</span><span>2.000 €</span></div>
+
+              <div className="custom-deliverables-grid">
+                <div><strong>{customPlan.posts}</strong><span>postări</span></div>
+                <div><strong>{customPlan.stories}</strong><span>stories</span></div>
+                <div><strong>{customPlan.reels}</strong><span>Reels / TikTok</span></div>
+                <div><strong>{customPlan.platforms}</strong><span>platforme</span></div>
+              </div>
+
+              <div className="custom-plan-notes">
+                <span><Check size={15} /> {customPlan.shoots > 0 ? `${customPlan.shoots} ${customPlan.shoots === 1 ? 'sesiune' : 'sesiuni'} foto/video în locație` : 'Materiale furnizate de client + editare profesională'}</span>
+                <span><Check size={15} /> {customPlan.support}</span>
+                <span><BarChart3 size={15} /> Raport lunar cu reach, engagement, trafic, comenzi și rezervări</span>
+              </div>
+
+              <div className="custom-configurator-foot">
+                <p>Bugetul Ads este flexibil și se stabilește separat, în funcție de obiectivele campaniei.</p>
+                <a href="#contact-propunere" className="custom-configurator-cta">Discutăm configurația</a>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
@@ -717,7 +806,7 @@ export default function App() {
         <div className={`accelerator-card ${activePackage !== 'individual' ? 'active' : ''}`}>
           <div className="card-top-tag">
             <Zap size={14} fill="currentColor" />
-            <span>Pachet Recomandat de Parteneriat</span>
+            <span>Ofertă de lansare · Primele 6 luni</span>
           </div>
           
           <h2>{activePackage === 'lite' ? "Pachetul Complet: Lite Accelerator" : "Pachetul Complet: Launch Accelerator"}</h2>
@@ -725,6 +814,11 @@ export default function App() {
             O strategie în 3 etape concepută pentru a lansa rapid produsele The Cheesecake House în mediul digital, 
             asigurând asistență tehnică completă și bugete controlate de promovare directă.
           </p>
+
+          <div className="ownership-note">
+            <CheckCircle2 size={18} />
+            <span>Codul site-ului și aplicației, baza de date, GitHub și accesul Firebase rămân în proprietatea The Cheesecake House.</span>
+          </div>
 
           <div className="steps-list">
             {/* Step 1 */}
@@ -758,9 +852,9 @@ export default function App() {
             <div className="step-row">
               <div className="step-badge">2</div>
               <div className="step-details">
-                <h4>Etapa 2: Lansare & Promovare Activă (Luni 1-3 sau 1-6)</h4>
+                <h4>Etapa 2: Oferta de Lansare (Primele 6 luni)</h4>
                 <p>
-                  Pornim motoarele de marketing. Administrăm campaniile pe Facebook, Instagram și TikTok, investind 400€ direct ca buget publicitar (Ads) pentru a atrage clienți noi în magazinele fizice din Mureș, Cluj și Bistrița. Mentenanța tehnică a aplicației și a site-ului este complet gratuită în această perioadă.
+                  Pornim motoarele de marketing pentru toate cele trei locații: Mureș, Cluj și Bistrița. În primele 6 luni păstrăm prețul promoțional, investim 400€ lunar direct în Ads și includem gratuit mentenanța tehnică. Conturile de promovare și rezultatele campaniilor rămân complet vizibile clientului.
                 </p>
                 {activePackage === 'lite' && (
                   <span className="step-pricing" style={{ color: 'var(--color-primary)' }}>
@@ -784,19 +878,18 @@ export default function App() {
             <div className="step-row">
               <div className="step-badge">3</div>
               <div className="step-details">
-                <h4>Etapa 3: Continuitate & Scalare (Din luna 4 sau 7)</h4>
+                <h4>Etapa 3: Continuitate & Scalare (Din luna 7)</h4>
                 <p>
-                  Trecem în faza de optimizare. Continuăm promovarea activă și mentenanța tehnică lunară pentru ca ecosistemul 
-                  să ruleze fără probleme. Mentenanța este redusă la un cost special de 100€ în loc de 250€ în afara pachetului.
+                  Trecem în faza de optimizare. Mentenanța de 100€ include monitorizare, remedierea erorilor și actualizări de compatibilitate pentru site și aplicație. Funcționalitățile complet noi se estimează separat.
                 </p>
                 {activePackage === 'lite' && (
                   <span className="step-pricing" style={{ color: 'var(--color-primary)' }}>
-                    Abonament: 1.250 € / lună (Include servicii Social Media Standard 750€ + administrare campanii Ads + Mentenanță tehnică 100€)
+                    Abonament: 1.250 € / lună (750€ Social Media + 400€ buget Ads + 100€ mentenanță tehnică)
                   </span>
                 )}
                 {activePackage === 'launch' && (
                   <span className="step-pricing" style={{ color: 'var(--color-primary)' }}>
-                    Abonament: 1.500 € / lună (Include servicii Social Media full 1000€ + administrare campanii Ads + Mentenanță tehnică 100€)
+                    Abonament: 1.500 € / lună (1.000€ Social Media full + 400€ buget Ads + 100€ mentenanță tehnică)
                   </span>
                 )}
                 {activePackage === 'individual' && (
@@ -811,7 +904,7 @@ export default function App() {
       </section>
 
       {/* CALL TO ACTION & PDF EXPORT SECTION */}
-      <section className="proposal-container" style={{ marginBottom: '80px' }}>
+      <section id="contact-propunere" className="proposal-container" style={{ marginBottom: '80px' }}>
         <div className="cta-section">
           <h2>Sună ca planul de dezvoltare de care aveți nevoie?</h2>
           <p>
