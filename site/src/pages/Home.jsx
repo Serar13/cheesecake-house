@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { getActiveProducts, getApprovedReviews } from '../services/catalog';
+import { preloadImages } from '../services/prefetch';
 import ProductCard from '../components/ProductCard';
+import ProductCardSkeleton from '../components/ProductCardSkeleton';
 import './Home.css';
 
 export default function Home() {
@@ -15,11 +17,15 @@ export default function Home() {
   useEffect(() => {
     let mounted = true;
     Promise.all([getActiveProducts(), getApprovedReviews()])
-      .then(([prods, revs]) => {
+      .then(async ([prods, revs]) => {
         if (!mounted) return;
         // Prefer featured products for the preview; fall back to the first few.
         const featured = prods.filter(p => p.featured);
         const preview = (featured.length > 0 ? featured : prods).slice(0, 3);
+        // Hold the skeletons until the preview imagery has decoded so the
+        // section reveals fully-formed with no pop-in.
+        await preloadImages(preview.map(p => p.image));
+        if (!mounted) return;
         setMenuPreviewProducts(preview);
         setReviews(revs);
         setLoading(false);
@@ -81,7 +87,9 @@ export default function Home() {
 
           <div className="teaser-products-preview">
             {loading ? (
-              <p className="teaser-intro">Se încarcă selecția...</p>
+              Array.from({ length: 3 }).map((_, i) => (
+                <ProductCardSkeleton key={i} />
+              ))
             ) : menuPreviewProducts.length === 0 ? (
               <p className="teaser-intro">Meniul va fi disponibil în curând.</p>
             ) : (

@@ -1,0 +1,200 @@
+/* ===================== Intro Splash ===================== */
+.cch-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fefdfb; /* signature cream */
+  cursor: pointer;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+  overflow: hidden;
+}
+
+.cch-splash.out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Warm radial glow behind the lockup */
+.cch-splash-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    120% 80% at 50% 42%,
+    rgba(196, 161, 120, 0.12),
+    rgba(254, 253, 251, 0) 62%
+  );
+  pointer-events: none;
+}
+
+.cch-splash-stage {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+}
+
+/* The lockup is centred; as the wordmark expands it grows to the right,
+   which naturally glides the logo to the left. */
+.cch-brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+}
+
+.cch-splash-logo {
+  width: 132px;
+  height: 132px;
+  object-fit: contain;
+  flex-shrink: 0;
+  opacity: 0;
+  transform: scale(0.82);
+  animation: cch-logo-in 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  filter: drop-shadow(0 14px 30px rgba(45, 36, 28, 0.16));
+  user-select: none;
+}
+
+@keyframes cch-logo-in {
+  from {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Wordmark collapsed by default, revealed on .reveal */
+.cch-brand-wordmark {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  max-width: 0;
+  margin-left: 0;
+  opacity: 0;
+  transform: translateX(10px);
+  transition:
+    max-width 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    margin-left 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.7s ease 0.1s;
+}
+
+.cch-splash.reveal .cch-brand-wordmark {
+  max-width: 460px;
+  margin-left: 22px;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.cch-brand-name {
+  font-family: var(--font-serif, 'Playfair Display', Georgia, serif);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1.1;
+  color: #2d241c;
+  white-space: nowrap;
+}
+
+.cch-brand-tagline {
+  font-family: var(--font-sans, 'Outfit', sans-serif);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #c4a178;
+  margin-top: 8px;
+  white-space: nowrap;
+}
+
+.cch-brand-underline {
+  display: block;
+  height: 2px;
+  width: 0;
+  margin-top: 12px;
+  background: linear-gradient(90deg, #c4a178, rgba(196, 161, 120, 0));
+  transition: width 0.8s ease 0.45s;
+}
+
+.cch-splash.reveal .cch-brand-underline {
+  width: 100%;
+}
+
+/* Hint to skip, fades in late */
+.cch-splash-skip {
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: var(--font-sans, sans-serif);
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(124, 112, 99, 0.5);
+  opacity: 0;
+  animation: cch-skip-in 0.6s ease 3.4s forwards;
+  pointer-events: none;
+}
+
+@keyframes cch-skip-in {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 560px) {
+  .cch-splash-logo {
+    width: 92px;
+    height: 92px;
+  }
+
+  .cch-brand-name {
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    white-space: normal;
+  }
+
+  .cch-brand-tagline {
+    font-size: 9px;
+    letter-spacing: 3px;
+  }
+
+  .cch-splash.reveal .cch-brand-wordmark {
+    max-width: calc(100vw - 150px);
+    margin-left: 14px;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .cch-splash-logo {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .cch-brand-wordmark {
+    transition: opacity 0.4s ease;
+  }
+
+  .cch-brand-underline {
+    transition: none;
+  }
+
+  .cch-splash-skip {
+    animation: none;
+    opacity: 1;
+  }
+}
