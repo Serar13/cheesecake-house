@@ -80,12 +80,14 @@ export default function SplashScreen({ onDone }) {
 
       <div className="cch-splash-stage">
         <div className="cch-brand-lockup">
-          <img
-            src={LOGO}
-            alt="The Cheesecake House"
-            className="cch-splash-logo"
-            draggable="false"
-          />
+          <div className="cch-logo-wrap">
+            <img
+              src={LOGO}
+              alt="The Cheesecake House"
+              className="cch-splash-logo"
+              draggable="false"
+            />
+          </div>
           <div className="cch-brand-wordmark">
             <span className="cch-brand-name">THE CHEESECAKE HOUSE</span>
             <span className="cch-brand-tagline">Premium Craft Cakes</span>

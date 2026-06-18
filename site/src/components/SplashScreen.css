@@ -48,11 +48,40 @@
   max-width: 100%;
 }
 
+/* Gold shimmer sweep — fires once at ~1.05s, right after the logo settles */
+.cch-logo-wrap {
+  position: relative;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.cch-logo-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 28%,
+    rgba(255, 230, 155, 0.72) 50%,
+    transparent 72%,
+    transparent 100%
+  );
+  transform: translateX(-200%) skewX(-12deg);
+  animation: cch-logo-shimmer 0.65s cubic-bezier(0.4, 0, 0.2, 1) 1.05s 1 forwards;
+  pointer-events: none;
+}
+
+@keyframes cch-logo-shimmer {
+  from { transform: translateX(-200%) skewX(-12deg); }
+  to   { transform: translateX(320%) skewX(-12deg); }
+}
+
 .cch-splash-logo {
   width: 132px;
   height: 132px;
   object-fit: contain;
-  flex-shrink: 0;
+  display: block;
   opacity: 0;
   transform: scale(0.82);
   animation: cch-logo-in 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -160,6 +189,7 @@
     height: 92px;
   }
 
+
   .cch-brand-name {
     font-size: 18px;
     letter-spacing: 0.5px;
@@ -179,6 +209,11 @@
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
+  .cch-logo-wrap::after {
+    animation: none;
+    display: none;
+  }
+
   .cch-splash-logo {
     animation: none;
     opacity: 1;
