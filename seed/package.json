@@ -1,0 +1,14 @@
+{
+  "name": "cheesecake-seed",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "One-off Firestore seeding for The Cheesecake House.",
+  "scripts": {
+    "seed": "node seed.mjs",
+    "seed:rest": "node seed-rest.mjs"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.0"
+  }
+}

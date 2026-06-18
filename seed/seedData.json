@@ -1,0 +1,66 @@
+{
+  "categories": [
+    { "id": "cake-collection", "name": "Cake Collection", "slug": "cake-collection", "icon": "🍰", "sortOrder": 1, "active": true },
+    { "id": "san-sebastian", "name": "San Sebastian", "slug": "san-sebastian", "icon": "🍮", "sortOrder": 2, "active": true },
+    { "id": "classic-cheesecake", "name": "Classic Cheesecake", "slug": "classic-cheesecake", "icon": "🧀", "sortOrder": 3, "active": true },
+    { "id": "cheesecake-jar", "name": "Cheesecake Jar", "slug": "cheesecake-jar", "icon": "🫙", "sortOrder": 4, "active": true },
+    { "id": "vegan-collection", "name": "Vegan Collection", "slug": "vegan-collection", "icon": "🌱", "sortOrder": 5, "active": true },
+    { "id": "drinks", "name": "Drinks", "slug": "drinks", "icon": "🥤", "sortOrder": 6, "active": true }
+  ],
+  "products": [
+    { "id": "carrot-cake", "categoryId": "cake-collection", "name": "Carrot Cake", "price": 24.0, "unit": "felie", "weight": "125 g", "imageUrl": "/images/carrot_cake.png", "description": "Un tort de morcovi pufos, aromat cu scorțișoară și completat de o cremă fină de brânză. Delicat, echilibrat și irezistibil.", "active": true, "featured": true, "availability": "available", "sortOrder": 1 },
+    { "id": "medovic-fistic", "categoryId": "cake-collection", "name": "Medovic cu fistic și zmeură", "price": 26.0, "unit": "felie", "weight": "130 g", "imageUrl": "/images/red_velvet.png", "description": "Foi fragede cu miere, cremă fină cu fistic și o inserție delicată de zmeură pentru un contrast ușor acrișor. Un desert rafinat, echilibrat și plin de savoare.", "active": true, "featured": true, "availability": "available", "sortOrder": 2 },
+    { "id": "red-velvet", "categoryId": "cake-collection", "name": "Red Velvet cu Căpșuni", "price": 24.0, "unit": "felie", "weight": "135 g", "imageUrl": "/images/red_velvet.png", "description": "Blat catifelat de Red velvet, fin și intens, îmbogățit cu o inserție fresh de căpșuni și cremă delicată de brânză. Dulce, ușor fructat și perfect echilibrat.", "active": true, "featured": true, "availability": "available", "sortOrder": 3 },
+    { "id": "san-sebastian-classic", "categoryId": "san-sebastian", "name": "San Sebastian Original", "price": 25.0, "unit": "felie", "weight": "150 g", "imageUrl": "/images/san_sebastian.png", "description": "Slăvitul cheesecake basc cu interior cremos, aproape curgător, și o crustă caramelizată delicioasă. Un adevărat răsfăț culinar.", "active": true, "featured": true, "availability": "available", "sortOrder": 4 },
+    { "id": "san-sebastian-ciocolata", "categoryId": "san-sebastian", "name": "San Sebastian cu sos de Ciocolată", "price": 28.0, "unit": "felie", "weight": "170 g", "imageUrl": "/images/san_sebastian.png", "description": "San Sebastian Cheesecake original servit din abundență cu sos cald de ciocolată belgiană cu lapte sau neagră.", "active": true, "featured": false, "availability": "available", "sortOrder": 5 },
+    { "id": "classic-strawberry", "categoryId": "classic-cheesecake", "name": "Classic New York cu Căpșuni", "price": 22.0, "unit": "felie", "weight": "140 g", "imageUrl": "/images/red_velvet.png", "description": "Reteta clasica de New York Cheesecake, coaptă lent, cu o crustă crocantă de biscuiți și un jeleu acrișor de căpșuni proaspete.", "active": true, "featured": false, "availability": "available", "sortOrder": 6 },
+    { "id": "classic-caramel", "categoryId": "classic-cheesecake", "name": "Classic cu Caramel Sărat", "price": 22.0, "unit": "felie", "weight": "140 g", "imageUrl": "/images/san_sebastian.png", "description": "Cheesecake clasic fin, acoperit cu un strat generos de caramel sărat preparat în casă și alune de pădure crocante.", "active": true, "featured": false, "availability": "available", "sortOrder": 7 },
+    { "id": "jar-raspberry", "categoryId": "cheesecake-jar", "name": "Raspberry Cheesecake Jar", "price": 20.0, "unit": "pahar", "weight": "150 g", "imageUrl": "/images/cheesecake_jar.png", "description": "Cheesecake la pahar (borcănaș) cu biscuiți digestivi untoși, cremă fină de brânză și piure proaspăt de zmeură aromatică.", "active": true, "featured": false, "availability": "available", "sortOrder": 8 },
+    { "id": "jar-oreo", "categoryId": "cheesecake-jar", "name": "Oreo & Caramel Jar", "price": 20.0, "unit": "pahar", "weight": "150 g", "imageUrl": "/images/cheesecake_jar.png", "description": "Desert la borcănaș cu straturi fine de cremă de brânză, biscuiți Oreo mărunțiți și inserție de sos intens de caramel.", "active": true, "featured": false, "availability": "available", "sortOrder": 9 },
+    { "id": "vegan-berry", "categoryId": "vegan-collection", "name": "Vegan Raw Cherry & Almond", "price": 26.0, "unit": "felie", "weight": "120 g", "imageUrl": "/images/cheesecake_jar.png", "description": "Cheesecake vegan preparat la rece din caju cremos, ulei de cocos pur, curmale și migdale crocante, topped cu cireșe zemoase.", "active": true, "featured": false, "availability": "available", "sortOrder": 10 },
+    { "id": "drink-espresso", "categoryId": "drinks", "name": "Espresso Single", "price": 9.0, "unit": "buc", "weight": "30 ml", "imageUrl": "/images/carrot_cake.png", "description": "Cafea espresso preparată din boabe de specialitate proaspăt prăjite, cu note intense de ciocolată și alune.", "active": true, "featured": false, "availability": "available", "sortOrder": 11 },
+    { "id": "drink-lemonade", "categoryId": "drinks", "name": "Limonadă Clasică", "price": 15.0, "unit": "buc", "weight": "400 ml", "imageUrl": "/images/cheesecake_jar.png", "description": "Băutură răcoritoare preparată din lămâi stoarse, miere de albine locală și mentă proaspătă.", "active": true, "featured": false, "availability": "available", "sortOrder": 12 }
+  ],
+  "locations": [
+    { "id": "tg-mures", "name": "The Cheesecake House Tg. Mureș", "city": "Târgu Mureș", "phone": "+40 757 823 828", "email": "comenzi@thecheesecakehouse.ro", "address": "Strada Nicolae Iorga 14, Târgu Mureș, Romania", "schedule": "Luni - Duminică: 10:00 - 19:30", "coordinates": { "lat": 46.5481, "lng": 24.5686 }, "active": true },
+    { "id": "cluj-napoca", "name": "The Cheesecake House Cluj-Napoca", "city": "Cluj-Napoca", "phone": "+40 740 017 179", "email": "contact@thecheesecakehouse.ro", "address": "Strada Samuil Micu 7, Cluj-Napoca, Romania", "schedule": "Luni - Duminică: 10:00 - 21:00", "coordinates": { "lat": 46.7684, "lng": 23.5866 }, "active": true },
+    { "id": "bistrita", "name": "The Cheesecake House Bistrița", "city": "Bistrița", "phone": "+40 753 066 444", "email": "contact@thecheesecakehouse.ro", "address": "Piața Mică 19, Bistrița, România", "schedule": "Luni - Duminică: 10:00 - 20:00", "coordinates": { "lat": 47.132, "lng": 24.4976 }, "active": true }
+  ],
+  "tables": [
+    { "id": "cluj-1", "locationId": "cluj-napoca", "name": "Masa 1", "seats": 2, "x": 19, "y": 38, "active": true, "notes": "Interior lângă vitrină" },
+    { "id": "cluj-2", "locationId": "cluj-napoca", "name": "Masa 2", "seats": 2, "x": 36, "y": 38, "active": true, "notes": "Interior centru" },
+    { "id": "cluj-3", "locationId": "cluj-napoca", "name": "Masa 3", "seats": 2, "x": 19, "y": 58, "active": true, "notes": "Interior stânga" },
+    { "id": "cluj-4", "locationId": "cluj-napoca", "name": "Masa 4", "seats": 4, "x": 38, "y": 61, "active": true, "notes": "Interior familie" },
+    { "id": "cluj-5", "locationId": "cluj-napoca", "name": "Masa 5", "seats": 2, "x": 57, "y": 38, "active": true, "notes": "Lângă geam" },
+    { "id": "cluj-6", "locationId": "cluj-napoca", "name": "Masa 6", "seats": 4, "x": 58, "y": 62, "active": true, "notes": "Canapea" },
+    { "id": "cluj-7", "locationId": "cluj-napoca", "name": "Masa 7", "seats": 2, "x": 76, "y": 29, "active": true, "notes": "Terasă sus" },
+    { "id": "cluj-8", "locationId": "cluj-napoca", "name": "Masa 8", "seats": 2, "x": 88, "y": 42, "active": true, "notes": "Terasă dreapta" },
+    { "id": "cluj-9", "locationId": "cluj-napoca", "name": "Masa 9", "seats": 4, "x": 76, "y": 61, "active": true, "notes": "Terasă outdoor" },
+    { "id": "cluj-10", "locationId": "cluj-napoca", "name": "Masa 10", "seats": 4, "x": 88, "y": 77, "active": true, "notes": "Terasă outdoor" },
+    { "id": "bistrita-1", "locationId": "bistrita", "name": "Masa 1", "seats": 2, "x": 18, "y": 36, "active": true, "notes": "Arcadă stânga" },
+    { "id": "bistrita-2", "locationId": "bistrita", "name": "Masa 2", "seats": 2, "x": 34, "y": 36, "active": true, "notes": "Arcadă centru-stânga" },
+    { "id": "bistrita-3", "locationId": "bistrita", "name": "Masa 3", "seats": 2, "x": 50, "y": 36, "active": true, "notes": "Arcadă centru" },
+    { "id": "bistrita-4", "locationId": "bistrita", "name": "Masa 4", "seats": 4, "x": 66, "y": 38, "active": true, "notes": "Zona familie" },
+    { "id": "bistrita-5", "locationId": "bistrita", "name": "Masa 5", "seats": 2, "x": 24, "y": 61, "active": true, "notes": "Mijloc stânga" },
+    { "id": "bistrita-6", "locationId": "bistrita", "name": "Masa 6", "seats": 4, "x": 45, "y": 62, "active": true, "notes": "Mijloc" },
+    { "id": "bistrita-7", "locationId": "bistrita", "name": "Masa 7", "seats": 2, "x": 64, "y": 64, "active": true, "notes": "Lângă geam" },
+    { "id": "bistrita-8", "locationId": "bistrita", "name": "Masa 8", "seats": 4, "x": 84, "y": 59, "active": true, "notes": "Terasă" },
+    { "id": "mures-1", "locationId": "tg-mures", "name": "Masa 1", "seats": 2, "x": 18, "y": 76, "active": true, "notes": "Lângă intrare" },
+    { "id": "mures-2", "locationId": "tg-mures", "name": "Masa 2", "seats": 4, "x": 35, "y": 39, "active": true, "notes": "Zona centrală sus" },
+    { "id": "mures-3", "locationId": "tg-mures", "name": "Masa 3", "seats": 2, "x": 53, "y": 39, "active": true, "notes": "Zona centrală dreapta" },
+    { "id": "mures-4", "locationId": "tg-mures", "name": "Masa 4", "seats": 4, "x": 36, "y": 62, "active": true, "notes": "Zona centrală jos" },
+    { "id": "mures-5", "locationId": "tg-mures", "name": "Masa 5", "seats": 2, "x": 56, "y": 63, "active": true, "notes": "Canapea separeu" },
+    { "id": "mures-6", "locationId": "tg-mures", "name": "Masa 6", "seats": 2, "x": 76, "y": 33, "active": true, "notes": "Terasă sus" },
+    { "id": "mures-7", "locationId": "tg-mures", "name": "Masa 7", "seats": 4, "x": 87, "y": 54, "active": true, "notes": "Terasă centru" },
+    { "id": "mures-8", "locationId": "tg-mures", "name": "Masa 8", "seats": 4, "x": 76, "y": 76, "active": true, "notes": "Terasă jos" }
+  ],
+  "promotions": [
+    { "id": "pistachio50", "title": "Reducere Flash: 50% la Feliile cu Fistic!", "description": "Doar astăzi, toate feliile premium cu fistic sunt la jumătate de preț. Cantitate limitată!", "code": "PISTACHIO50", "discountType": "percent", "discountValue": 50, "active": true, "startsAt": null, "endsAt": null, "targetProductId": "medovic-fistic", "targetCategoryId": null, "exclusive": false },
+    { "id": "secret-lavender", "title": "Secret Menu Deblocat 🤫", "description": "Cheesecake Lavandă și Miere disponibil exclusiv pentru membrii VIP săptămâna aceasta.", "code": "SECRETLAVENDER", "discountType": "percent", "discountValue": 0, "active": true, "startsAt": null, "endsAt": null, "targetProductId": null, "targetCategoryId": null, "exclusive": true }
+  ],
+  "reviews": [
+    { "id": "review-1", "name": "Andrei Popescu", "rating": 5, "text": "Cea mai bună prăjitură San Sebastian din România! Sosul de ciocolată este absolut divin, iar personalul este deosebit de amabil.", "approved": true },
+    { "id": "review-2", "name": "Maria Szabo", "rating": 5, "text": "Carrot Cake-ul este extrem de pufos și aromat, cu o cremă de brânză perfect echilibrată, nu foarte dulce. Recomand cu drag locația din Cluj!", "approved": true },
+    { "id": "review-3", "name": "Ioan Mureșan", "rating": 5, "text": "Am comandat un cheesecake întreg pentru aniversarea soției. A fost gata exact la timp, arăta impecabil și gustul a fost de neegalat.", "approved": true }
+  ]
+}

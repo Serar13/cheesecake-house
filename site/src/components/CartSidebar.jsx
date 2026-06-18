@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
+import { createOrder } from '../services/submissions';
 import './CartSidebar.css';
 
 export default function CartSidebar() {
@@ -21,6 +22,8 @@ export default function CartSidebar() {
   const [formData, setFormData] = useState({ name: '', phone: '', address: '', notes: '' });
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [orderId, setOrderId] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   React.useEffect(() => {
     if (currentUser) {
@@ -44,14 +47,45 @@ export default function CartSidebar() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (cart.length === 0) return;
-    
-    // Simulate API call
-    const generatedId = 'CH-' + Math.floor(100000 + Math.random() * 900000);
-    setOrderId(generatedId);
-    setOrderSuccess(true);
+
+    // Require authentication (Firestore rules require a signed-in user).
+    if (!currentUser) {
+      setShowAuthModal(true);
+      return;
+    }
+
+    setSubmitError('');
+    setSubmitting(true);
+    try {
+      const items = cart.map(item => ({
+        productId: item.product.id,
+        name: item.product.name,
+        price: item.product.price,
+        quantity: item.quantity,
+      }));
+
+      const id = await createOrder({
+        userId: currentUser.uid,
+        customerName: formData.name,
+        locationId: selectedStore ? selectedStore.id : null,
+        items,
+        total: grandTotal,
+        deliveryType,
+        address: deliveryType === 'delivery' ? formData.address : '',
+        notes: formData.notes,
+      });
+
+      setOrderId(id);
+      setOrderSuccess(true);
+    } catch (err) {
+      console.error('createOrder failed:', err);
+      setSubmitError('Nu am putut plasa comanda. Te rugăm să încerci din nou.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleCloseSuccess = () => {
@@ -77,7 +111,7 @@ export default function CartSidebar() {
             <h3>{t('orderSuccessTitle')}</h3>
             <p className="order-id-badge">{t('orderSuccessId')} <strong>{orderId}</strong></p>
             <p className="success-desc">
-              {t('orderSuccessDesc')} <strong>{selectedStore.name}</strong>.
+              {t('orderSuccessDesc')} <strong>{selectedStore?.name}</strong>.
             </p>
             <div className="summary-card">
               <h4>{t('orderSuccessDetails')}</h4>
@@ -86,7 +120,7 @@ export default function CartSidebar() {
               {deliveryType === 'delivery' ? (
                 <p><strong>{t('orderSuccessAddress')}</strong> {formData.address}</p>
               ) : (
-                <p><strong>{t('orderSuccessPickup')}</strong> {selectedStore.address}</p>
+                <p><strong>{t('orderSuccessPickup')}</strong> {selectedStore?.address}</p>
               )}
               <p className="success-total">Total: <strong>{grandTotal.toFixed(2)} RON</strong></p>
             </div>
@@ -174,7 +208,7 @@ export default function CartSidebar() {
                 {/* Info Text */}
                 {deliveryType === 'delivery' && (
                   <p className="delivery-info-text">
-                    * {t('deliveryInfoLabel')} <strong>{selectedStore.name.replace('The Cheesecake House ', '')}</strong>. 
+                    * {t('deliveryInfoLabel')} <strong>{selectedStore?.name?.replace('The Cheesecake House ', '')}</strong>.
                     {t('deliveryFreeText')}
                   </p>
                 )}
@@ -253,8 +287,12 @@ export default function CartSidebar() {
                       </div>
                     </div>
 
-                    <button type="submit" className="place-order-btn">
-                      {t('btnPlaceOrder')} ({grandTotal.toFixed(2)} RON)
+                    {submitError && (
+                      <p className="form-error-text" style={{ color: '#c0392b', marginTop: '8px' }}>{submitError}</p>
+                    )}
+
+                    <button type="submit" className="place-order-btn" disabled={submitting}>
+                      {submitting ? 'Se trimite...' : `${t('btnPlaceOrder')} (${grandTotal.toFixed(2)} RON)`}
                     </button>
                   </form>
                 ) : (

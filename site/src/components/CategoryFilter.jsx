@@ -1,21 +1,20 @@
 import React from 'react';
-import { categories } from '../mockData/menuData';
 import './CategoryFilter.css';
 
-export default function CategoryFilter({ activeCategory, onCategoryChange }) {
+export default function CategoryFilter({ categories = [], activeCategory, onCategoryChange }) {
   return (
     <div className="category-filter-wrapper">
       <div className="category-filter-container">
-        <button 
+        <button
           className={`category-tab ${activeCategory === 'all' ? 'active' : ''}`}
           onClick={() => onCategoryChange('all')}
         >
           <span className="category-icon">🌟</span>
           <span className="category-name">Toate</span>
         </button>
-        
+
         {categories.map(cat => (
-          <button 
+          <button
             key={cat.id}
             className={`category-tab ${activeCategory === cat.id ? 'active' : ''}`}
             onClick={() => onCategoryChange(cat.id)}

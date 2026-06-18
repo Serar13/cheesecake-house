@@ -1,0 +1,28 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isAdmin() {
+      return request.auth != null
+        && firestore.exists(/databases/(default)/documents/users/$(request.auth.uid))
+        && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Public read for catalog media; only admins can upload/replace/delete.
+    match /products/{file=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /categories/{file=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /promotions/{file=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /locations/{file=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
+import { createOfferRequest } from '../services/submissions';
 import './CandyBar.css';
 
 export default function CandyBar() {
@@ -39,6 +40,8 @@ export default function CandyBar() {
   const [formMessage, setFormMessage] = useState('');
   const [formGuestsInput, setFormGuestsInput] = useState('100');
   const [formSuccess, setFormSuccess] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   // A-la-carte menu items
   const menuItems = [
@@ -159,13 +162,46 @@ Estimated budget: approx. ${totalCostEstimate} RON.`;
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitError('');
     if (!formName || !formPhone || !formEmail || !formDate) {
-      alert(isRo ? 'Vă rugăm să completați câmpurile obligatorii (*).' : 'Please fill in the required fields (*).');
+      setSubmitError(isRo ? 'Vă rugăm să completați câmpurile obligatorii (*).' : 'Please fill in the required fields (*).');
       return;
     }
-    setFormSuccess(true);
+
+    // Build a descriptive message including the selected services, theme and location.
+    const selectedServices = Object.entries(formServices)
+      .filter(([, v]) => v)
+      .map(([k]) => k)
+      .join(', ');
+    const composedMessage = [
+      formMessage,
+      formTheme ? `${isRo ? 'Tematică' : 'Theme'}: ${formTheme}` : '',
+      selectedServices ? `${isRo ? 'Servicii' : 'Services'}: ${selectedServices}` : '',
+      formLocation ? `${isRo ? 'Locație' : 'Location'}: ${formLocation}` : '',
+    ].filter(Boolean).join('\n');
+
+    setSubmitting(true);
+    try {
+      await createOfferRequest({
+        customerName: formName,
+        email: formEmail,
+        phone: formPhone,
+        eventType: 'candybar',
+        eventDate: formDate,
+        guestCount: parseInt(formGuestsInput, 10) || 0,
+        message: composedMessage,
+      });
+      setFormSuccess(true);
+    } catch (err) {
+      console.error('createOfferRequest failed:', err);
+      setSubmitError(isRo
+        ? 'Nu am putut trimite solicitarea. Te rugăm să încerci din nou.'
+        : 'We could not send your request. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -485,8 +521,14 @@ Estimated budget: approx. ${totalCostEstimate} RON.`;
                   ></textarea>
                 </div>
 
-                <button type="submit" className="form-submit-btn">
-                  ✨ {isRo ? 'Trimite Solicitarea' : 'Send Quote Request'}
+                {submitError && (
+                  <p className="form-error-text" style={{ color: '#c0392b' }}>{submitError}</p>
+                )}
+
+                <button type="submit" className="form-submit-btn" disabled={submitting}>
+                  ✨ {submitting
+                    ? (isRo ? 'Se trimite...' : 'Sending...')
+                    : (isRo ? 'Trimite Solicitarea' : 'Send Quote Request')}
                 </button>
               </form>
             )}

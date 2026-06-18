@@ -1,38 +1,47 @@
-import React, { useState } from 'react';
-import { 
-  StyleSheet, 
-  Text, 
-  View, 
-  ScrollView, 
-  TouchableOpacity, 
-  FlatList, 
-  Modal, 
-  Alert 
+import React, { useState, useMemo } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  FlatList,
+  Modal,
+  Alert,
+  ActivityIndicator
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../context/AppContext';
 
-const PRODUCTS = [
-  { id: 'p1', name: 'Cheesecake Clasic New York', desc: 'Rețeta originală, fină și cremoasă cu sos de fructe de pădure.', price: 24, category: 'cheesecake' },
-  { id: 'p2', name: 'Cheesecake cu Fistic premium', desc: 'Cremă fină de brânză îmbogățită cu fistic de Bronte și glazură catifelată.', price: 28, category: 'cheesecake' },
-  { id: 'p3', name: 'Cheesecake Belgian Chocolate', desc: 'Blat crocant cu cacao, cremă bogată cu ciocolată belgiană fină.', price: 26, category: 'cheesecake' },
-  { id: 'p4', name: 'Cappuccino Cremoso', desc: 'Espresso dublu premium, lapte spumat fin și un praf de cacao deasupra.', price: 14, category: 'cafe' },
-  { id: 'p5', name: 'Flat White Special', desc: 'Espresso dublu de specialitate cu lapte cremos, ideal pentru dimineți.', price: 16, category: 'cafe' },
-  { id: 'p6', name: 'Limonadă cu Căpșuni și Busuioc', desc: 'Limonadă proaspătă, infuzată cu căpșuni dulci și frunze de busuioc.', price: 18, category: 'drinks' },
-  { id: 'p7', name: 'Cheesecake Lavandă și Miere 🤫', desc: 'Ediție secretă cu note delicate de lavandă organică și miere locală de albine.', price: 29, category: 'secret' }
-];
+const FALLBACK_LOCATIONS = ['Cluj-Napoca', 'Bistrița', 'Târgu Mureș'];
 
 export default function HomeScreen() {
-  const { cart, addToCart, removeFromCart, updateQuantity, clearCart, balance, payWithWallet, colors, isLoggedIn, requestAuth: openAuth, t } = useApp();
+  const {
+    cart, addToCart, removeFromCart, updateQuantity, clearCart,
+    balance, payWithWallet, colors, isLoggedIn, requestAuth: openAuth, t,
+    products, productsLoading, locations
+  } = useApp();
   const styles = getStyles(colors);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [cartVisible, setCartVisible] = useState(false);
-  const [pickupLocation, setPickupLocation] = useState('Cluj-Napoca');
+
+  // Location names sourced from Firestore (graceful fallback to static list).
+  const locationNames = useMemo(() => {
+    const names = (locations || []).map(l => l.name).filter(Boolean);
+    return names.length > 0 ? names : FALLBACK_LOCATIONS;
+  }, [locations]);
+
+  const [pickupLocation, setPickupLocation] = useState(FALLBACK_LOCATIONS[0]);
   const [pickupTime, setPickupTime] = useState('15 minute');
 
-  const filteredProducts = selectedCategory === 'all' 
-    ? PRODUCTS 
-    : PRODUCTS.filter(p => p.category === selectedCategory);
+  const selectedLocationObj = useMemo(
+    () => (locations || []).find(l => l.name === pickupLocation),
+    [locations, pickupLocation]
+  );
+
+  const filteredProducts = selectedCategory === 'all'
+    ? products
+    : products.filter(p => p.category === selectedCategory);
 
   const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
@@ -50,14 +59,14 @@ export default function HomeScreen() {
     );
   };
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (cart.length === 0) return;
 
     if (!isLoggedIn) {
       promptAuth(t('connectingOrRegistering'));
       return;
     }
-    
+
     if (balance < cartTotal) {
       Alert.alert(
         t('insufficientFunds'),
@@ -67,7 +76,11 @@ export default function HomeScreen() {
       return;
     }
 
-    const success = payWithWallet(cartTotal);
+    const success = await payWithWallet(cartTotal, {
+      items: cart,
+      locationId: selectedLocationObj?.id || '',
+      locationName: pickupLocation
+    });
     if (success) {
       Alert.alert(
         'Comandă Plasată!',
@@ -126,10 +139,22 @@ export default function HomeScreen() {
       </View>
 
       {/* Product List */}
-      <FlatList 
+      <FlatList
         data={filteredProducts}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.listContent}
+        ListEmptyComponent={(
+          <View style={styles.emptyState}>
+            {productsLoading ? (
+              <>
+                <ActivityIndicator color={colors.gold} />
+                <Text style={styles.emptyStateText}>{t('loadingCakes')}</Text>
+              </>
+            ) : (
+              <Text style={styles.emptyStateText}>{t('cartEmpty')}</Text>
+            )}
+          </View>
+        )}
         renderItem={({ item }) => (
           <View style={[styles.productCard, item.category === 'secret' && styles.secretProductCard]}>
             <View style={styles.productInfo}>
@@ -209,8 +234,8 @@ export default function HomeScreen() {
             <View style={styles.checkoutConfig}>
               <Text style={styles.configLabel}>{t('pickupLoc')}</Text>
               <View style={styles.rowPicker}>
-                {['Cluj-Napoca', 'Bistrița', 'Târgu Mureș'].map(loc => (
-                  <TouchableOpacity 
+                {locationNames.map(loc => (
+                  <TouchableOpacity
                     key={loc}
                     style={[styles.pickerOption, pickupLocation === loc && styles.pickerOptionActive]}
                     onPress={() => setPickupLocation(loc)}
@@ -310,6 +335,17 @@ const getStyles = (colors) => StyleSheet.create({
   listContent: {
     padding: 16,
     paddingBottom: 100
+  },
+  emptyState: {
+    paddingTop: 60,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  emptyStateText: {
+    color: colors.textMuted,
+    fontSize: 13,
+    marginTop: 12,
+    textAlign: 'center'
   },
   productCard: {
     flexDirection: 'row',

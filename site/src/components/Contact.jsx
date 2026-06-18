@@ -1,25 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
-import { stores } from '../mockData/menuData';
+import { getActiveLocations } from '../services/catalog';
+import { createOfferRequest } from '../services/submissions';
 import './Contact.css';
 
 export default function Contact() {
   const { t } = useApp();
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
   const [contactData, setContactData] = useState({ name: '', email: '', phone: '', eventType: 'wedding', message: '' });
+
+  const [stores, setStores] = useState([]);
+  const [storesLoading, setStoresLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    getActiveLocations()
+      .then((locs) => {
+        if (!mounted) return;
+        setStores(locs);
+        setStoresLoading(false);
+      })
+      .catch((err) => {
+        console.error('Contact locations load failed:', err);
+        if (!mounted) return;
+        setStoresLoading(false);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setContactData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setFormSubmitted(true);
-    setTimeout(() => {
-      setFormSubmitted(false);
+    setSubmitError('');
+    setSubmitting(true);
+    try {
+      await createOfferRequest({
+        customerName: contactData.name,
+        email: contactData.email,
+        phone: contactData.phone,
+        eventType: contactData.eventType,
+        eventDate: '',
+        guestCount: 0,
+        message: contactData.message,
+      });
+      setFormSubmitted(true);
       setContactData({ name: '', email: '', phone: '', eventType: 'wedding', message: '' });
-    }, 5000);
+      setTimeout(() => {
+        setFormSubmitted(false);
+      }, 5000);
+    } catch (err) {
+      console.error('createOfferRequest failed:', err);
+      setSubmitError('Nu am putut trimite solicitarea. Te rugăm să încerci din nou.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -40,20 +82,24 @@ export default function Contact() {
             <p className="locations-intro-text">Ne găsești în Târgu Mureș, Cluj-Napoca și Bistrița. Te așteptăm cu vitrinele pline de prăjituri proaspete!</p>
             
             <div className="store-cards-list">
-              {stores.map(store => (
+              {storesLoading ? (
+                <p className="locations-intro-text">Se încarcă locațiile...</p>
+              ) : stores.length === 0 ? (
+                <p className="locations-intro-text">Locațiile vor fi disponibile în curând.</p>
+              ) : stores.map(store => (
                 <div key={store.id} className="store-location-card">
                   <div className="store-card-header">
                     <span className="store-icon">🏪</span>
                     <h4>{store.name.replace('The Cheesecake House ', '')}</h4>
                   </div>
                   <div className="store-details">
-                    <p><strong>📍 Adresă:</strong> {store.address}</p>
-                    <p><strong>📞 Telefon:</strong> <a href={`tel:${store.phone.replace(/\s+/g, '')}`} className="contact-link">{store.phone}</a></p>
-                    <p><strong>✉️ Email:</strong> <a href={`mailto:${store.email}`} className="contact-link">{store.email}</a></p>
-                    <p><strong>🕒 Program:</strong> {store.schedule}</p>
+                    {store.address && <p><strong>📍 Adresă:</strong> {store.address}</p>}
+                    {store.phone && <p><strong>📞 Telefon:</strong> <a href={`tel:${store.phone.replace(/\s+/g, '')}`} className="contact-link">{store.phone}</a></p>}
+                    {store.email && <p><strong>✉️ Email:</strong> <a href={`mailto:${store.email}`} className="contact-link">{store.email}</a></p>}
+                    {store.schedule && <p><strong>🕒 Program:</strong> {store.schedule}</p>}
                   </div>
-                  <a 
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(store.address)}`}
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(store.address || store.name)}`}
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="map-button"
@@ -151,8 +197,12 @@ export default function Contact() {
                     ></textarea>
                   </div>
 
-                  <button type="submit" className="form-submit-btn">
-                    {t('formSubmit')}
+                  {submitError && (
+                    <p className="form-error-text" style={{ color: '#c0392b', marginTop: '8px' }}>{submitError}</p>
+                  )}
+
+                  <button type="submit" className="form-submit-btn" disabled={submitting}>
+                    {submitting ? 'Se trimite...' : t('formSubmit')}
                   </button>
                 </form>
               )}

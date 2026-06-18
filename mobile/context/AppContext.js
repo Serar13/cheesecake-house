@@ -11,14 +11,71 @@ import {
   FacebookAuthProvider,
   OAuthProvider
 } from 'firebase/auth';
-import { 
-  doc, 
-  setDoc, 
+import {
+  doc,
+  setDoc,
   getDoc,
   deleteDoc,
   onSnapshot
 } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  getActiveProducts,
+  getActivePromotions,
+  getActiveLocations,
+  getUserReservations,
+  createOrder,
+  createReservation
+} from '../services/firestore';
+
+// Map a Firestore promotion doc to the shape the Offers UI expects.
+const mapPromotionToOffer = (p) => {
+  const category = p.category || (p.exclusive ? 'secret' : 'flash');
+  return {
+    id: p.id,
+    title: p.title || '',
+    desc: p.description || '',
+    code: p.code || '',
+    expiry: p.expiry || '',
+    isNew: p.isNew !== undefined ? p.isNew : true,
+    category
+  };
+};
+
+// Map a Firestore product doc to the shape the menu/cart UI expects.
+const mapProduct = (p) => ({
+  id: p.id,
+  name: p.name || '',
+  desc: p.description || '',
+  description: p.description || '',
+  price: typeof p.price === 'number' ? p.price : Number(p.price) || 0,
+  category: p.categoryId || p.category || 'cheesecake',
+  categoryId: p.categoryId || '',
+  unit: p.unit || '',
+  weight: p.weight || '',
+  // imageUrl may be a server-relative path ("/images/..") that won't resolve
+  // on a device; expose it as-is and let the UI guard against it.
+  imageUrl: p.imageUrl || '',
+  availability: p.availability || 'available'
+});
+
+// Map a Firestore reservation doc to the shape the Reservations UI expects.
+const mapReservation = (r) => ({
+  id: r.id,
+  location: r.locationName || r.location || '',
+  locationId: r.locationId || '',
+  tableId: r.tableId || '',
+  table: r.tableLabel || r.table || '',
+  date: r.dateLabel || (r.date && r.time ? `${r.date}, la ora ${r.time}` : (r.date || '')),
+  rawDate: r.date || '',
+  time: r.time || '',
+  guests: r.guests || 0,
+  status: r.status === 'confirmed' ? 'Confirmată'
+    : r.status === 'cancelled' ? 'Anulată'
+    : r.status === 'pending' ? 'În așteptare'
+    : (r.status || 'În așteptare'),
+  preOrder: Array.isArray(r.items) ? r.items : (r.preOrder || [])
+});
 
 const AppContext = createContext();
 
@@ -474,31 +531,65 @@ export const AppProvider = ({ children }) => {
   // 6. Cart State
   const [cart, setCart] = useState([]);
 
-  // 7. Reservations State
-  const [reservations, setReservations] = useState([
-    { id: 'res-1', location: 'Cluj-Napoca', table: 'Masa 3 (Geam)', date: 'Diseară, 19:30', guests: 2, status: 'Confirmată', preOrder: [] }
-  ]);
+  // 7. Reservations State (loaded from Firestore for the signed-in user)
+  const [reservations, setReservations] = useState([]);
 
-  // 8. Notifications / Flash Offers State
-  const [offers, setOffers] = useState([
-    {
-      id: 'off-1',
-      title: 'Reducere Flash: 50% la Feliile cu Fistic!',
-      desc: 'Doar în următoarele 2 ore în locația din Cluj-Napoca. Arată codul din aplicație la casă.',
-      code: 'PISTACHIO50',
-      expiry: 'Expiră în 1h 45m',
-      isNew: true,
-      category: 'flash'
-    },
-    {
-      id: 'off-2',
-      title: 'Secret Menu Deblocat 🤫',
-      desc: 'Cheesecake-ul experimental de Lavandă și Miere este acum disponibil exclusiv pentru tine din meniul secret!',
-      expiry: 'Disponibil săptămâna aceasta',
-      isNew: true,
-      category: 'secret'
+  // 8. Notifications / Flash Offers State (loaded from Firestore promotions)
+  const [offers, setOffers] = useState([]);
+
+  // 9. Catalog State (products / locations loaded from Firestore)
+  const [products, setProducts] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [productsLoading, setProductsLoading] = useState(true);
+  const [offersLoading, setOffersLoading] = useState(true);
+  const [locationsLoading, setLocationsLoading] = useState(true);
+
+  // Load global catalog data (products, promotions, locations) from Firestore.
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const [prods, promos, locs] = await Promise.all([
+          getActiveProducts(),
+          getActivePromotions(),
+          getActiveLocations()
+        ]);
+        if (!active) return;
+        setProducts(prods.map(mapProduct));
+        setOffers(promos.map(mapPromotionToOffer));
+        setLocations(locs);
+      } catch (err) {
+        console.error('Error loading catalog data:', err);
+      } finally {
+        if (active) {
+          setProductsLoading(false);
+          setOffersLoading(false);
+          setLocationsLoading(false);
+        }
+      }
+    })();
+    return () => { active = false; };
+  }, []);
+
+  // Load the signed-in user's reservations from Firestore.
+  useEffect(() => {
+    let active = true;
+    if (!user?.uid) {
+      setReservations([]);
+      return () => { active = false; };
     }
-  ]);
+    (async () => {
+      try {
+        const rows = await getUserReservations(user.uid);
+        if (!active) return;
+        setReservations(rows.map(mapReservation));
+      } catch (err) {
+        console.error('Error loading reservations:', err);
+        if (active) setReservations([]);
+      }
+    })();
+    return () => { active = false; };
+  }, [user?.uid]);
 
   // Translations helper
   const t = (key) => {
@@ -784,11 +875,58 @@ export const AppProvider = ({ children }) => {
 
   const clearCart = () => setCart([]);
 
-  const addReservation = (newRes) => {
-    setReservations(prev => [
-      { id: `res-${Date.now()}`, status: 'Confirmată', ...newRes },
-      ...prev
-    ]);
+  const addReservation = async (newRes) => {
+    // Only persist when a user is signed in (reservations require userId).
+    if (!auth.currentUser) {
+      Alert.alert(t('needAccountTitle'), t('needAccountDesc'));
+      return false;
+    }
+
+    const uid = auth.currentUser.uid;
+    const items = Array.isArray(newRes.preOrder) ? newRes.preOrder : [];
+
+    // Persisted doc follows the canonical reservations schema.
+    const docData = {
+      userId: uid,
+      customerName: user?.name || '',
+      locationId: newRes.locationId || '',
+      locationName: newRes.location || '',
+      tableId: newRes.tableId || '',
+      tableLabel: newRes.table || '',
+      date: newRes.rawDate || '',
+      time: newRes.time || '',
+      dateLabel: newRes.date || '',
+      durationMinutes: newRes.durationMinutes || 90,
+      guests: newRes.guests || 0,
+      items,
+      status: 'pending'
+    };
+
+    try {
+      const newId = await createReservation(docData);
+      // Reflect locally regardless of returned id (id may be null on offline).
+      setReservations(prev => [
+        {
+          id: newId || `res-${Date.now()}`,
+          location: newRes.location || '',
+          locationId: newRes.locationId || '',
+          tableId: newRes.tableId || '',
+          table: newRes.table || '',
+          date: newRes.date || '',
+          rawDate: newRes.rawDate || '',
+          time: newRes.time || '',
+          guests: newRes.guests || 0,
+          status: 'În așteptare',
+          preOrder: items
+        },
+        ...prev
+      ]);
+      return true;
+    } catch (err) {
+      console.error('Error creating reservation:', err);
+      Alert.alert(t('error'), t('error'));
+      return false;
+    }
   };
 
   const topUpWallet = async (amount) => {
@@ -804,13 +942,13 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const payWithWallet = async (amount) => {
+  const payWithWallet = async (amount, orderMeta = null) => {
     if (balance >= amount) {
       try {
         const newBalance = balance - amount;
         const stampsEarned = Math.floor(amount / 30);
         const count = stampsEarned > 0 ? stampsEarned : 1;
-        
+
         let newStamps = stamps + count;
         let newVipPoints = vipPoints + (count * 15);
         let activeVoucher = birthdayVoucherActive;
@@ -822,12 +960,35 @@ export const AppProvider = ({ children }) => {
 
         if (auth.currentUser) {
           const userDocRef = doc(db, 'users', auth.currentUser.uid);
-          await setDoc(userDocRef, { 
+          await setDoc(userDocRef, {
             balance: newBalance,
             stamps: newStamps,
             vipPoints: newVipPoints,
             birthdayVoucherActive: activeVoucher
           }, { merge: true });
+
+          // Persist the order to Firestore (source: 'mobile', status 'pending').
+          try {
+            const orderItems = (orderMeta?.items || cart).map((item) => ({
+              productId: item.id || '',
+              name: item.name || '',
+              price: typeof item.price === 'number' ? item.price : Number(item.price) || 0,
+              quantity: item.quantity || 1
+            }));
+            await createOrder({
+              userId: auth.currentUser.uid,
+              customerName: user?.name || '',
+              source: 'mobile',
+              locationId: orderMeta?.locationId || '',
+              locationName: orderMeta?.locationName || '',
+              items: orderItems,
+              total: amount,
+              status: 'pending'
+            });
+          } catch (orderErr) {
+            // An order-write failure must not roll back the wallet payment.
+            console.error('Error creating order doc:', orderErr);
+          }
         }
 
         setBalance(newBalance);
@@ -879,6 +1040,11 @@ export const AppProvider = ({ children }) => {
       cart,
       reservations,
       offers,
+      products,
+      locations,
+      productsLoading,
+      offersLoading,
+      locationsLoading,
       addStamp,
       addToCart,
       removeFromCart,
