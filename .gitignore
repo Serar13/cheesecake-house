@@ -37,6 +37,9 @@ service-account*.json
 .idea/
 .vscode/
 
+# Claude Code session data
+.claude/
+
 # Firebase local cache
 .firebase/
 firebase-debug.log
