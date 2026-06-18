@@ -1,5 +1,6 @@
 import { Suspense, lazy, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import PageTransition from './components/PageTransition';
 import { AppProvider } from './context/AppContext';
 import Header from './components/Header';
 import CartSidebar from './components/CartSidebar';
@@ -83,16 +84,18 @@ function MainApp() {
         {/* Pages Switch Router */}
         <main className="main-content-layout">
           <Suspense fallback={<RouteFallback />}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/meniu" element={<MenuPage />} />
-              <Route path="/despre-noi" element={<AboutPage />} />
-              <Route path="/candy-bar" element={<CandyBarPage />} />
-              <Route path="/recenzii" element={<ReviewsPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/rezervari" element={<ReservationsPage />} />
-              <Route path="/profil" element={<ProfilePage />} />
-            </Routes>
+            <PageTransition>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/meniu" element={<MenuPage />} />
+                <Route path="/despre-noi" element={<AboutPage />} />
+                <Route path="/candy-bar" element={<CandyBarPage />} />
+                <Route path="/recenzii" element={<ReviewsPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/rezervari" element={<ReservationsPage />} />
+                <Route path="/profil" element={<ProfilePage />} />
+              </Routes>
+            </PageTransition>
           </Suspense>
         </main>
 
