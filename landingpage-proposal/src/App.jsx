@@ -14,17 +14,17 @@ import {
 } from 'lucide-react';
 import './App.css';
 
+const CUSTOM_PRICE_STEPS = [300, 400, 500, 600, 700];
+
 function getCustomPlan(budget) {
-  if (budget < 750) {
-    return { posts: 8, stories: 12, reels: 2, platforms: 2, shoots: 0, support: 'Moderare de bază' };
-  }
-  if (budget < 1000) {
-    return { posts: 12, stories: 20, reels: 4, platforms: 2, shoots: 1, support: 'Community management 3 zile / săptămână' };
-  }
-  if (budget < 1500) {
-    return { posts: 24, stories: 35, reels: 8, platforms: 3, shoots: 1, support: 'Community management zilnic' };
-  }
-  return { posts: 30, stories: 50, reels: 12, platforms: 3, shoots: 2, support: 'Community management prioritar' };
+  const plans = {
+    300: { name: 'Start Local', posts: 4, stories: 6, reels: 1, platforms: 1, shoots: 0, support: 'Moderare de bază' },
+    400: { name: 'Essential', posts: 6, stories: 8, reels: 1, platforms: 1, shoots: 0, support: 'Moderare de bază + programare conținut' },
+    500: { name: 'Social Focus', posts: 8, stories: 12, reels: 2, platforms: 2, shoots: 0, support: 'Community management 2 zile / săptămână' },
+    600: { name: 'Growth', posts: 10, stories: 14, reels: 2, platforms: 2, shoots: 1, support: 'Community management 3 zile / săptămână' },
+    700: { name: 'Growth Plus', posts: 10, stories: 16, reels: 3, platforms: 2, shoots: 1, support: 'Community management 3 zile / săptămână' }
+  };
+  return plans[budget] || plans[700];
 }
 
 export default function App() {
@@ -34,7 +34,7 @@ export default function App() {
   // - 'launch': Pachet Launch Accelerator (1000 €/lună, Recomandat)
   const [activePackage, setActivePackage] = useState('launch');
   const [customOpen, setCustomOpen] = useState(false);
-  const [customBudget, setCustomBudget] = useState(1000);
+  const [customBudget, setCustomBudget] = useState(700);
   const customPlan = getCustomPlan(customBudget);
 
   // URL-ul site-ului demo creat deja pentru client (inlocuieste cu link-ul tau real)
@@ -753,7 +753,7 @@ export default function App() {
             <div className="custom-configurator">
               <div className="custom-configurator-head">
                 <div>
-                  <span className="custom-configurator-kicker">Pachet construit pe bugetul tău</span>
+                  <span className="custom-configurator-kicker">Pachet {customPlan.name} · construit pe bugetul tău</span>
                   <h3>Configurator Social Media</h3>
                   <p>Trage sliderul și vezi imediat volumul lunar recomandat.</p>
                 </div>
@@ -764,20 +764,31 @@ export default function App() {
               </div>
 
               <label className="custom-slider-label" htmlFor="custom-budget">
-                Buget lunar pentru servicii de conținut și administrare
+                Alege una dintre cele 5 trepte de buget
               </label>
               <input
                 id="custom-budget"
                 className="custom-budget-slider"
                 type="range"
-                min="500"
-                max="2000"
-                step="50"
+                min="300"
+                max="700"
+                step="100"
                 value={customBudget}
                 onChange={(event) => setCustomBudget(Number(event.target.value))}
-                style={{ '--slider-progress': `${((customBudget - 500) / 1500) * 100}%` }}
+                style={{ '--slider-progress': `${((customBudget - 300) / 400) * 100}%` }}
               />
-              <div className="custom-slider-scale"><span>500 €</span><span>2.000 €</span></div>
+              <div className="custom-price-steps" aria-label="Trepte de buget">
+                {CUSTOM_PRICE_STEPS.map((price) => (
+                  <button
+                    key={price}
+                    type="button"
+                    className={customBudget === price ? 'active' : ''}
+                    onClick={() => setCustomBudget(price)}
+                  >
+                    {price} €
+                  </button>
+                ))}
+              </div>
 
               <div className="custom-deliverables-grid">
                 <div><strong>{customPlan.posts}</strong><span>postări</span></div>
