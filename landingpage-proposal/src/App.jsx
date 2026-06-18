@@ -482,50 +482,51 @@ export default function App() {
                   </div>
                 )}
 
-                {/* 2. Splash Screen UI */}
+                {/* 2. Splash Screen UI — faithful reproduction of the real mobile SplashScreen */}
                 {phoneState === 'splash' && (
                   <div className="phone-splash-screen animate-fade-in">
-                    <div className="phone-status-bar-app dark-mode">
+                    <div className="phone-status-bar-app">
                       <span>01:17</span>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                         <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" /></svg>
                         <span>100%</span>
                       </div>
                     </div>
-                    
+
+                    {/* Center stage: holds the brand block while loading, then the
+                        surprise message — both perfectly centred between the status
+                        bar and the home indicator. */}
+                    <div className="splash-stage">
+                      {splashStep !== 'surprise' && (
+                        <div className={`splash-logo-container ${splashStep === 'fadeOutLogo' ? 'animate-fade-out' : ''}`}>
+                          <img
+                            src="https://assets.boosteat.com/images/c165/2023-03-21/20230321093311212641979d71009f/logo.png"
+                            alt="Cheesecake House Logo"
+                            className="splash-brand-logo"
+                          />
+                          <h4 className="splash-brand-name">The Cheesecake House</h4>
+                          <p className="splash-brand-tagline">Premium Craft Cakes</p>
+                        </div>
+                      )}
+
+                      {splashStep === 'surprise' && (
+                        <div className="splash-surprise-container animate-fade-in">
+                          <p className="surprise-text">
+                            Mai bine nu, haide să nu stricăm surpriza. 😉
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Loader pinned near the bottom, matching the mobile layout */}
                     {splashStep !== 'surprise' && (
-                      <div className={`splash-logo-container ${splashStep === 'fadeOutLogo' ? 'animate-fade-out' : ''}`}>
-                        <img 
-                          src="https://assets.boosteat.com/images/c165/2023-03-21/20230321093311212641979d71009f/logo.png" 
-                          alt="Cheesecake House Logo" 
-                          className="splash-brand-logo"
-                        />
-                        <h4 className="splash-brand-name">THE CHEESECAKE HOUSE</h4>
-                        <p className="splash-brand-tagline">Din pasiune pentru dulce</p>
-                      </div>
-                    )}
-
-                    {splashStep === 'loading' && (
-                      <div className="splash-spinner-container">
+                      <div className={`splash-loader ${splashStep === 'fadeOutLogo' ? 'animate-fade-out' : ''}`}>
                         <div className="splash-spinner"></div>
+                        <p className="splash-loading-text">Se încarcă sortimentele delicioase...</p>
                       </div>
                     )}
 
-                    {splashStep === 'fadeOutLogo' && (
-                      <div className="splash-spinner-container animate-fade-out">
-                        <div className="splash-spinner"></div>
-                      </div>
-                    )}
-
-                    {splashStep === 'surprise' && (
-                      <div className="splash-surprise-container animate-fade-in">
-                        <p className="surprise-text">
-                          Mai bine nu, haide să nu stricăm surpriza. 😉
-                        </p>
-                      </div>
-                    )}
-                    
-                    <div className="lockscreen-indicator-bar light-color" />
+                    <div className="lockscreen-indicator-bar dark-color" />
                   </div>
                 )}
               </div>
