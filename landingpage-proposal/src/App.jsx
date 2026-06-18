@@ -38,7 +38,7 @@ export default function App() {
   const customPlan = getCustomPlan(customBudget);
 
   // URL-ul site-ului demo creat deja pentru client (inlocuieste cu link-ul tau real)
-  const demoSiteUrl = "https://cheesecakehouse.ro";
+  const demoSiteUrl = "https://chessecakehouse.web.app/";
 
   // Simulatorul de Notificări Push & Aplicație Mobilă
   const [phoneState, setPhoneState] = useState('lock'); // 'lock' | 'splash'
