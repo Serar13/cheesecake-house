@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { getActiveCategories, getActiveProducts } from '../services/catalog';
+import { preloadImages } from '../services/prefetch';
 import CategoryFilter from '../components/CategoryFilter';
 import ProductGrid from '../components/ProductGrid';
+import ProductCardSkeleton from '../components/ProductCardSkeleton';
 
 export default function MenuPage() {
   const [activeCategory, setActiveCategory] = useState('all');
@@ -15,9 +17,12 @@ export default function MenuPage() {
   useEffect(() => {
     let mounted = true;
     Promise.all([getActiveCategories(), getActiveProducts()])
-      .then(([cats, prods]) => {
+      .then(async ([cats, prods]) => {
         if (!mounted) return;
         setCategories(cats);
+        // Decode the first screenful of imagery before clearing skeletons.
+        await preloadImages(prods.slice(0, 8).map((p) => p.image));
+        if (!mounted) return;
         setProducts(prods);
         setLoading(false);
       })
@@ -53,10 +58,13 @@ export default function MenuPage() {
       />
 
       {loading ? (
-        <div className="no-products-message">
-          <span className="no-products-icon">⏳</span>
-          <p>Se încarcă meniul...</p>
-        </div>
+        <section className="product-grid-container">
+          <div className="product-grid">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <ProductCardSkeleton key={i} />
+            ))}
+          </div>
+        </section>
       ) : error ? (
         <div className="no-products-message">
           <span className="no-products-icon">⚠️</span>

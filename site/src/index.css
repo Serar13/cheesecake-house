@@ -105,6 +105,10 @@
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
+html {
+  overflow-x: hidden; /* html is the scroll container when body has overflow set */
+}
+
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
