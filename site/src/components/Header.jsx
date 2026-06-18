@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import './Header.css';
@@ -6,9 +6,6 @@ import './Header.css';
 export default function Header() {
   const {
     cartCount,
-    selectedStore,
-    setSelectedStore,
-    locations,
     setIsCartOpen,
     theme,
     toggleTheme,
@@ -19,7 +16,6 @@ export default function Header() {
     setShowAuthModal
   } = useApp();
 
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -43,11 +39,6 @@ export default function Header() {
 
   const currentLang = languages.find(l => l.code === language) || languages[0];
 
-  const handleStoreSelect = (store) => {
-    setSelectedStore(store);
-    setDropdownOpen(false);
-  };
-
   const handleLangSelect = (code) => {
     setLanguage(code);
     setLangDropdownOpen(false);
@@ -56,62 +47,13 @@ export default function Header() {
   return (
     <header className={`main-header ${scrolled ? 'scrolled' : ''}`}>
       <div className="header-container">
-        {/* Left Side: Location Selector & Language Selector */}
+        {/* Left Side: Language Selector */}
         <div className="header-left">
-          {/* Location Selector (integrated inline dropdown) */}
-          <div className="store-selector-inline">
-            <button 
-              className="store-inline-trigger-btn" 
-              onClick={() => {
-                setDropdownOpen(!dropdownOpen);
-                setLangDropdownOpen(false);
-              }}
-              aria-haspopup="true"
-              aria-expanded={dropdownOpen}
-              title="Schimbă cofetăria / Change location"
-            >
-              <span className="inline-pin-icon">📍</span>
-              <span className="inline-store-name">
-                {selectedStore ? selectedStore.name.replace('The Cheesecake House ', '') : 'Locație'}
-              </span>
-              <span className="inline-arrow">{dropdownOpen ? '▲' : '▼'}</span>
-            </button>
-
-            {dropdownOpen && (
-              <ul className="store-dropdown-menu-left">
-                {locations.length === 0 ? (
-                  <li>
-                    <span className="dropdown-item-address" style={{ padding: '8px 12px', display: 'block' }}>
-                      Se încarcă locațiile...
-                    </span>
-                  </li>
-                ) : (
-                  locations.map(store => (
-                    <li key={store.id}>
-                      <button
-                        className={`dropdown-item ${selectedStore && store.id === selectedStore.id ? 'active' : ''}`}
-                        onClick={() => handleStoreSelect(store)}
-                      >
-                        <strong>{store.name.replace('The Cheesecake House ', '')}</strong>
-                        {store.address && (
-                          <span className="dropdown-item-address">{store.address.split(',')[0]}</span>
-                        )}
-                      </button>
-                    </li>
-                  ))
-                )}
-              </ul>
-            )}
-          </div>
-
           {/* Language Selector Dropdown */}
           <div className="lang-selector-wrapper">
             <button 
               className="lang-selector-btn" 
-              onClick={() => {
-                setLangDropdownOpen(!langDropdownOpen);
-                setDropdownOpen(false);
-              }}
+              onClick={() => setLangDropdownOpen(!langDropdownOpen)}
               aria-haspopup="true"
               aria-expanded={langDropdownOpen}
               title="Schimbă limba / Change language"

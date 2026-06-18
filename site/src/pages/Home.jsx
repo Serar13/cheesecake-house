@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { getActiveProducts, getApprovedReviews } from '../services/catalog';
@@ -6,11 +6,12 @@ import ProductCard from '../components/ProductCard';
 import './Home.css';
 
 export default function Home() {
-  const { t, selectedStore } = useApp();
+  const { t, selectedStore, setSelectedStore, locations } = useApp();
 
   const [menuPreviewProducts, setMenuPreviewProducts] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [locationMenuOpen, setLocationMenuOpen] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -58,7 +59,41 @@ export default function Home() {
         <div className="hero-content text-center">
           <div className="hero-badge-row">
             <span className="hero-badge">{t('heroBadge')}</span>
-            <span className="hero-location-badge">📍 {selectedStore?.name.replace('The Cheesecake House ', '')}</span>
+            <div className="hero-location-selector">
+              <button
+                type="button"
+                className="hero-location-badge"
+                onClick={() => setLocationMenuOpen(open => !open)}
+                aria-haspopup="listbox"
+                aria-expanded={locationMenuOpen}
+              >
+                <span>📍 {selectedStore?.name.replace('The Cheesecake House ', '') || 'Alege locația'}</span>
+                <span className="hero-location-arrow" aria-hidden="true">{locationMenuOpen ? '▲' : '▼'}</span>
+              </button>
+
+              {locationMenuOpen && (
+                <div className="hero-location-menu" role="listbox" aria-label="Alege locația">
+                  {locations.length === 0 ? (
+                    <span className="hero-location-empty">Se încarcă locațiile...</span>
+                  ) : locations.map(store => (
+                    <button
+                      type="button"
+                      role="option"
+                      aria-selected={selectedStore?.id === store.id}
+                      className={`hero-location-option ${selectedStore?.id === store.id ? 'active' : ''}`}
+                      key={store.id}
+                      onClick={() => {
+                        setSelectedStore(store);
+                        setLocationMenuOpen(false);
+                      }}
+                    >
+                      <strong>{store.name.replace('The Cheesecake House ', '')}</strong>
+                      {store.address && <span>{store.address.split(',')[0]}</span>}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
           <h1 className="hero-title">The Cheesecake House</h1>
           <p className="hero-subtitle">{t('heroSubtitle')}</p>
