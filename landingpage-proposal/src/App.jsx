@@ -338,7 +338,7 @@ export default function App() {
                 </li>
                 <li>
                   <BarChart3 size={16} className="check-icon" />
-                  <span>Dashboard KPI: vânzări, comenzi, rezervări și rezultate pe surse</span>
+                  <span>Panou de rezultate: vânzări, comenzi, rezervări și sursa fiecărei comenzi</span>
                 </li>
                 <li>
                   <Check size={16} className="check-icon" />
@@ -657,7 +657,7 @@ export default function App() {
                   </li>
                   <li>
                     <BarChart3 size={16} />
-                    <span>Raport lunar KPI și rezultate integrate în panoul admin</span>
+                    <span>Raport lunar de performanță, cu rezultatele disponibile și în panoul de administrare</span>
                   </li>
                 </ul>
               </div>
@@ -696,7 +696,7 @@ export default function App() {
                   </li>
                   <li>
                     <BarChart3 size={16} />
-                    <span>Raport lunar KPI: reach, engagement, trafic, comenzi și rezervări</span>
+                    <span>Raport lunar: vizualizări, interacțiuni, trafic, comenzi și rezervări</span>
                   </li>
                 </ul>
               </div>
@@ -800,7 +800,7 @@ export default function App() {
               <div className="custom-plan-notes">
                 <span><Check size={15} /> {customPlan.shoots > 0 ? `${customPlan.shoots} ${customPlan.shoots === 1 ? 'sesiune' : 'sesiuni'} foto/video în locație` : 'Materiale furnizate de client + editare profesională'}</span>
                 <span><Check size={15} /> {customPlan.support}</span>
-                <span><BarChart3 size={15} /> Raport lunar cu reach, engagement, trafic, comenzi și rezervări</span>
+                <span><BarChart3 size={15} /> Raport lunar cu vizualizări, interacțiuni, trafic, comenzi și rezervări</span>
               </div>
 
               <div className="custom-configurator-foot">
