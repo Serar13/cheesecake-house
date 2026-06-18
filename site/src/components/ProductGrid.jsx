@@ -1,13 +1,16 @@
 import React from 'react';
+import { useApp } from '../context/AppContext';
 import ProductCard from './ProductCard';
 import './ProductGrid.css';
 
 export default function ProductGrid({ products }) {
+  const { t } = useApp();
+
   if (products.length === 0) {
     return (
       <div className="no-products-message">
         <span className="no-products-icon">🧁</span>
-        <p>Ne pare rău, nu am găsit produse în această categorie momentan.</p>
+        <p>{t('menuEmptyCategory')}</p>
       </div>
     );
   }

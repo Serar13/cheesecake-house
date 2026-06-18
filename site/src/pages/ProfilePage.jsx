@@ -37,7 +37,7 @@ export default function ProfilePage() {
   const handleSaveProfile = async (e) => {
     e.preventDefault();
     if (!name.trim()) {
-      setError('Numele nu poate fi gol.');
+      setError(t('profileErrorEmptyName'));
       return;
     }
     setLoading(true);
@@ -47,7 +47,7 @@ export default function ProfilePage() {
       setEditMode(false);
     } catch (err) {
       console.error(err);
-      setError('A apărut o eroare la salvarea profilului.');
+      setError(t('profileErrorSave'));
     } finally {
       setLoading(false);
     }
@@ -57,10 +57,10 @@ export default function ProfilePage() {
     setLoading(true);
     try {
       await topUpWallet(amount);
-      alert(`Alimentare reușită: +${amount} RON!`);
+      alert(`${t('profileTopUpSuccess')} +${amount} RON!`);
     } catch (err) {
       console.error(err);
-      alert('Eroare la alimentarea portofelului.');
+      alert(t('profileTopUpError'));
     } finally {
       setLoading(false);
     }
@@ -68,18 +68,18 @@ export default function ProfilePage() {
 
   const handleUseVoucher = () => {
     if (!currentUser?.birthdayVoucherActive) return;
-    alert("Pentru a scana și folosi voucherul pentru o felie gratuită de cheesecake, te rugăm să descarci și să folosești aplicația noastră mobilă (disponibilă pe App Store și Google Play)!");
+    alert(t('profileVoucherAlert'));
   };
 
   const handleDeleteAccount = async () => {
     setLoading(true);
     try {
       await deleteAccount();
-      alert('Contul tău a fost șters cu succes.');
+      alert(t('profileDeleteSuccess'));
       navigate('/');
     } catch (err) {
       console.error(err);
-      alert('Eroare la ștergerea contului. Din motive de securitate, este posibil să fie necesar să te reconectezi înainte de a șterge contul.');
+      alert(t('profileDeleteError'));
     } finally {
       setLoading(false);
     }
@@ -112,48 +112,46 @@ export default function ProfilePage() {
 
         {!currentUser ? (
           /* Guest Locked View */
-          <div className="profile-locked-card">
-            <div className="locked-icon">🔒</div>
-            <h3 className="locked-title">Secțiune Blocată</h3>
-            <p className="locked-desc">
-              Această secțiune este destinată clienților cu cont. Conectează-te sau creează un cont în câteva secunde!
-            </p>
+            <div className="profile-locked-card">
+              <div className="locked-icon">🔒</div>
+            <h3 className="locked-title">{t('profileLockedTitle')}</h3>
+            <p className="locked-desc">{t('profileLockedDesc')}</p>
             <button 
               className="profile-connect-btn" 
               onClick={() => setShowAuthModal(true)}
             >
-              Conectare / Cont nou
+              {t('profileConnectCta')}
             </button>
           </div>
         ) : editMode ? (
           /* Edit Profile Form */
           <form onSubmit={handleSaveProfile} className="profile-edit-card">
-            <h3 className="profile-section-heading">Editează Profilul</h3>
+            <h3 className="profile-section-heading">{t('profileEditTitle')}</h3>
             {error && <div className="profile-page-error">{error}</div>}
             <div className="profile-page-field">
-              <label>Nume Complet</label>
+              <label>{t('profileFullName')}</label>
               <input 
                 type="text" 
                 value={name} 
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Ex: Popescu Andrei"
+                placeholder={t('authRegisterNamePlaceholder')}
                 disabled={loading}
                 required
               />
             </div>
             <div className="profile-page-field">
-              <label>Număr Telefon</label>
+              <label>{t('profilePhone')}</label>
               <input 
                 type="tel" 
                 value={phone} 
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="Ex: 0755 123 456"
+                placeholder={t('authRegisterPhonePlaceholder')}
                 disabled={loading}
               />
             </div>
             <div className="profile-edit-buttons">
               <button type="submit" className="profile-save-button" disabled={loading}>
-                {loading ? 'Se salvează...' : 'Salvează Modificările'}
+                {loading ? t('profileSaving') : t('profileSave')}
               </button>
               <button 
                 type="button" 
@@ -161,7 +159,7 @@ export default function ProfilePage() {
                 onClick={() => setEditMode(false)}
                 disabled={loading}
               >
-                Anulează
+                {t('profileCancel')}
               </button>
             </div>
           </form>
@@ -179,9 +177,9 @@ export default function ProfilePage() {
                   <div className="profile-info-details">
                     <h4 className="user-name">{currentUser.name || 'Client'}</h4>
                     <p className="user-email">{currentUser.email}</p>
-                    <p className="user-phone">{currentUser.phone || 'Fără număr de telefon'}</p>
+                    <p className="user-phone">{currentUser.phone || t('profileNoPhone')}</p>
                   </div>
-                  <button className="user-edit-btn" onClick={handleOpenEdit} disabled={loading} title="Editează profilul">
+                  <button className="user-edit-btn" onClick={handleOpenEdit} disabled={loading} title={t('profileEditButton')}>
                     ✏️
                   </button>
                 </div>
@@ -191,32 +189,32 @@ export default function ProfilePage() {
                 <div className="profile-loyalty-row">
                   <div className="loyalty-stat">
                     <span className="stat-value">🎟️ {currentUser.stamps || 0}/9</span>
-                    <span className="stat-label">Felii până la cadou</span>
+                    <span className="stat-label">{t('profileStampsLabel')}</span>
                   </div>
                   <div className="loyalty-stat">
                     <span className="stat-value">✨ {currentUser.vipPoints || 0}</span>
-                    <span className="stat-label">Puncte VIP</span>
+                    <span className="stat-label">{t('profileVipPointsLabel')}</span>
                   </div>
                 </div>
 
                 <div className="profile-loyalty-nudge-box">
                   <span className="nudge-icon">📲</span>
                   <p className="nudge-text">
-                    Pentru a acumula felii, puncte VIP și a le folosi în cofetării, descarcă <strong>aplicația mobilă</strong>!
+                    {t('profileAppNudge')}
                   </p>
                 </div>
               </div>
 
               {/* Wallet Card */}
-              <h3 className="profile-section-heading">Portofel Digital</h3>
+              <h3 className="profile-section-heading">{t('profileWalletTitle')}</h3>
               <div className="profile-wallet-display">
                 <div className="wallet-card-header">
                   <span className="wallet-card-brand">THE CHEESECAKE HOUSE</span>
-                  <span className="wallet-card-type">Card Portofel Digital</span>
+                  <span className="wallet-card-type">{t('profileWalletType')}</span>
                 </div>
                 <div className="wallet-card-balance">
                   <span className="balance-value">{(currentUser.balance || 0).toFixed(2)} RON</span>
-                  <span className="balance-label">Soldul tău digital</span>
+                  <span className="balance-label">{t('profileWalletBalance')}</span>
                 </div>
                 <div className="wallet-card-footer">
                   <span className="wallet-card-number">**** **** **** 1989</span>
@@ -235,43 +233,43 @@ export default function ProfilePage() {
             {/* Right Column: Vouchers & Actions */}
             <div className="profile-column">
               {/* Vouchers */}
-              <h3 className="profile-section-heading">Vouchere și Cadouri Active</h3>
+              <h3 className="profile-section-heading">{t('profileVoucherTitle')}</h3>
               {currentUser.birthdayVoucherActive ? (
                 <div className="birthday-voucher-box" onClick={handleUseVoucher}>
                   <div className="voucher-gift-icon">🎂</div>
                   <div className="voucher-text-details">
-                    <span className="voucher-name-title">Felie Cadou de Ziua Ta!</span>
-                    <span className="voucher-desc-text">O felie din orice cheesecake din meniu, gratuită.</span>
+                    <span className="voucher-name-title">{t('profileBirthdayVoucherTitle')}</span>
+                    <span className="voucher-desc-text">{t('profileBirthdayVoucherDesc')}</span>
                   </div>
                   <button className="voucher-action-btn" disabled={loading}>Scan</button>
                 </div>
               ) : (
                 <div className="vouchers-empty-state">
-                  Nu ai alte vouchere active momentan.
+                  {t('profileNoVouchers')}
                 </div>
               )}
 
               {/* Account Actions */}
               <div className="account-actions-box">
                 <button onClick={handleLogout} className="account-logout-btn" disabled={loading}>
-                  Deconectare Cont 🚪
+                  {t('profileLogout')}
                 </button>
 
                 {confirmDelete ? (
                   <div className="account-delete-confirm-box">
-                    <p>Ești sigur că vrei să-ți ștergi contul definitiv? Toate datele tale și soldul vor fi pierdute.</p>
+                    <p>{t('profileDeleteConfirm')}</p>
                     <div className="confirm-buttons-row">
                       <button onClick={handleDeleteAccount} className="delete-yes-btn" disabled={loading}>
-                        Da, Șterge definitiv
+                        {t('profileDeleteYes')}
                       </button>
                       <button onClick={() => setConfirmDelete(false)} className="delete-no-btn" disabled={loading}>
-                        Anulează
+                        {t('profileDeleteNo')}
                       </button>
                     </div>
                   </div>
                 ) : (
                   <button onClick={() => setConfirmDelete(true)} className="account-delete-btn" disabled={loading}>
-                    Șterge Contul 🗑️
+                    {t('profileDelete')}
                   </button>
                 )}
               </div>

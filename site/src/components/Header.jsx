@@ -38,6 +38,11 @@ export default function Header() {
   ];
 
   const currentLang = languages.find(l => l.code === language) || languages[0];
+  const languageLabels = {
+    ro: 'Română',
+    en: 'English',
+    hu: 'Magyar',
+  };
 
   const handleLangSelect = (code) => {
     setLanguage(code);
@@ -56,7 +61,7 @@ export default function Header() {
               onClick={() => setLangDropdownOpen(!langDropdownOpen)}
               aria-haspopup="true"
               aria-expanded={langDropdownOpen}
-              title="Schimbă limba / Change language"
+              title={t('headerChangeLanguage')}
             >
               <span className="lang-flag">{currentLang.flag}</span>
               <span className="lang-code-text">{currentLang.label}</span>
@@ -72,7 +77,7 @@ export default function Header() {
                       onClick={() => handleLangSelect(lang.code)}
                     >
                       <span className="lang-flag">{lang.flag}</span>
-                      <span>{lang.label === 'RO' ? 'Română' : lang.label === 'EN' ? 'English' : 'Magyar'}</span>
+                      <span>{languageLabels[lang.code]}</span>
                     </button>
                   </li>
                 ))}
@@ -100,8 +105,8 @@ export default function Header() {
           <button 
             className="theme-toggle-btn"
             onClick={toggleTheme}
-            aria-label={theme === 'light' ? 'Comută pe Mod Întunecat' : 'Comută pe Mod Luminos'}
-            title={theme === 'light' ? 'Mod Întunecat' : 'Mod Luminos'}
+            aria-label={theme === 'light' ? t('headerThemeAriaLight') : t('headerThemeAriaDark')}
+            title={theme === 'light' ? t('headerThemeLight') : t('headerThemeDark')}
           >
             {theme === 'light' ? '🌙' : '☀️'}
           </button>
@@ -111,7 +116,7 @@ export default function Header() {
             <Link 
               to="/profil" 
               className="user-profile-btn"
-              title={currentUser.name || "Profilul Meu"}
+              title={currentUser.name || t('headerProfile')}
             >
               <span className="profile-btn-icon">👤</span>
               <span className="profile-btn-text">{currentUser.name.split(' ')[0]}</span>
@@ -120,10 +125,10 @@ export default function Header() {
             <button 
               className="login-trigger-btn"
               onClick={() => setShowAuthModal(true)}
-              title="Conectează-te în cont"
+              title={t('headerLoginTitle')}
             >
               <span className="profile-btn-icon">🔑</span>
-              <span className="profile-btn-text">Conectare</span>
+              <span className="profile-btn-text">{t('headerLogin')}</span>
             </button>
           )}
 
@@ -131,7 +136,7 @@ export default function Header() {
           <button 
             className="cart-trigger-btn" 
             onClick={() => setIsCartOpen(true)}
-            aria-label="Deschide coșul de cumpărături"
+            aria-label={t('headerCartAria')}
           >
             <span className="cart-icon">🛒</span>
             <span className="cart-label">{t('cartLabel')}</span>

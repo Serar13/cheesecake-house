@@ -68,7 +68,7 @@ export default function MenuPage() {
       ) : error ? (
         <div className="no-products-message">
           <span className="no-products-icon">⚠️</span>
-          <p>Ne pare rău, nu am putut încărca meniul momentan. Te rugăm să încerci din nou.</p>
+          <p>{t('menuLoadError')}</p>
         </div>
       ) : (
         <ProductGrid products={filteredProducts} />

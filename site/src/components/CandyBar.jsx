@@ -5,7 +5,11 @@ import './CandyBar.css';
 
 export default function CandyBar() {
   const { t, language } = useApp();
-  const isRo = language === 'ro';
+  const pick = (ro, en, hu) => {
+    if (language === 'hu') return hu;
+    if (language === 'en') return en;
+    return ro;
+  };
 
   // Carousel state
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -46,59 +50,45 @@ export default function CandyBar() {
   // A-la-carte menu items
   const menuItems = [
     {
-      name: isRo ? 'Mini Cheesecake' : 'Mini Cheesecake',
+      name: 'Mini Cheesecake',
       price: '12 RON',
-      desc: isRo 
-        ? 'Varianta miniaturală a cheesecakes-urilor noastre. Arome la alegere: Căpșuni, Zmeură, Caramel Sărat, Oreo, Snickers, Fistic.' 
-        : 'Miniature version of our signature cheesecakes. Available flavors: Strawberry, Raspberry, Salted Caramel, Oreo, Snickers, Pistachio.',
+      desc: pick('Varianta miniaturală a cheesecakes-urilor noastre. Arome la alegere: Căpșuni, Zmeură, Caramel Sărat, Oreo, Snickers, Fistic.', 'Miniature version of our signature cheesecakes. Available flavors: Strawberry, Raspberry, Salted Caramel, Oreo, Snickers, Pistachio.', 'Saját cheesecakes-eink miniatűr változata. Elérhető ízek: eper, málna, sós karamell, Oreo, Snickers, pisztácia.'),
       image: 'https://assets.boosteat.com/images/c165/2023-05-10/20230510120118212645b878ee4599/image.jpeg'
     },
     {
-      name: isRo ? 'Cheesecake la Pahar (120g)' : 'Cheesecake in a Jar (120g)',
+      name: pick('Cheesecake la Pahar (120g)', 'Cheesecake in a Jar (120g)', 'Poharas Cheesecake (120g)'),
       price: '15 RON',
-      desc: isRo 
-        ? 'Shot premium de cheesecake fin așezat în straturi într-un borcan elegant de sticlă, acoperit cu sos de fructe de pădure sau caramel.' 
-        : 'Premium cheesecake layered beautifully in an elegant glass jar, topped with fresh berry sauce or rich caramel.',
+      desc: pick('Shot premium de cheesecake fin așezat în straturi într-un borcan elegant de sticlă, acoperit cu sos de fructe de pădure sau caramel.', 'Premium cheesecake layered beautifully in an elegant glass jar, topped with fresh berry sauce or rich caramel.', 'Prémium cheesecake elegáns üvegpohárban rétegezve, erdei gyümölcsös szósszal vagy karamellel a tetején.'),
       image: 'https://assets.boosteat.com/images/c165/2023-05-10/20230510120557212645b88a5f418f/image.jpeg'
     },
     {
-      name: isRo ? 'Mini Pavlova' : 'Mini Pavlova',
+      name: 'Mini Pavlova',
       price: '15 RON',
-      desc: isRo 
-        ? 'Coajă fină de bezea crocantă la exterior și moale la interior, umplută cu cremă fină de vanilie și decorată cu fructe proaspete.' 
-        : 'Delicate meringue shell, crisp on the outside and soft inside, filled with fine vanilla cream and decorated with fresh fruits.',
+      desc: pick('Coajă fină de bezea crocantă la exterior și moale la interior, umplută cu cremă fină de vanilie și decorată cu fructe proaspete.', 'Delicate meringue shell, crisp on the outside and soft inside, filled with fine vanilla cream and decorated with fresh fruits.', 'Finom habcsókhéj, kívül roppanós, belül puha, vaníliakrémmel töltve és friss gyümölcsökkel díszítve.'),
       image: 'https://assets.boosteat.com/images/c165/2023-05-10/20230510120611212645b88b3ac05c/image.jpeg'
     },
     {
-      name: isRo ? 'Macarons Premium' : 'Premium Macarons',
+      name: pick('Macarons Premium', 'Premium Macarons', 'Prémium Macaronok'),
       price: '6 RON',
-      desc: isRo 
-        ? 'Biscuiți franțuzești din făină de migdale cu umpluturi cremoase de fistic, ciocolată neagră, zmeură sau caramel sărat.' 
-        : 'French almond meringue cookies with rich, creamy fillings of pistachio, dark chocolate, raspberry, or salted caramel.',
+      desc: pick('Biscuiți franțuzești din făină de migdale cu umpluturi cremoase de fistic, ciocolată neagră, zmeură sau caramel sărat.', 'French almond meringue cookies with rich, creamy fillings of pistachio, dark chocolate, raspberry, or salted caramel.', 'Francia mandulalisztes macaronok gazdag pisztáciás, étcsokoládés, málnás vagy sós karamellás töltelékkel.'),
       image: 'https://assets.boosteat.com/images/c165/2023-05-10/20230510120633212645b88c9e70d1/image.jpeg'
     },
     {
-      name: isRo ? 'Cupcakes Tematice' : 'Themed Cupcakes',
+      name: pick('Cupcakes Tematice', 'Themed Cupcakes', 'Tematikus Cupcake-ek'),
       price: '8 RON',
-      desc: isRo 
-        ? 'Brioșe pufoase cu morcovi și nuci sau banane, decorate cu o cupolă bogată de cremă de brânză fină.' 
-        : 'Fluffy carrot & walnut or banana muffins, decorated with a rich swirl of cream cheese frosting.',
+      desc: pick('Brioșe pufoase cu morcovi și nuci sau banane, decorate cu o cupolă bogată de cremă de brânză fină.', 'Fluffy carrot & walnut or banana muffins, decorated with a rich swirl of cream cheese frosting.', 'Puha répa-diós vagy banános muffinok gazdag krémsajtos toppinggal.'),
       image: 'https://assets.boosteat.com/images/c165/2023-05-10/20230510120530212645b888a4069f/image.jpeg'
     },
     {
-      name: isRo ? 'Sărățele cu Telemea (kg)' : 'Salty Cheese Crackers (kg)',
+      name: pick('Sărățele cu Telemea (kg)', 'Salty Cheese Crackers (kg)', 'Sós sajtos rudak (kg)'),
       price: '60 RON',
-      desc: isRo 
-        ? 'Sărățele crocante preparate cu unt, telemea maturată și chimen sau mac, perfecte pentru echilibrarea gustului dulce al candy bar-ului.' 
-        : 'Crisp savory crackers made with butter, matured local cheese, and cumin or poppy seeds, perfect to balance the sweet bar.',
+      desc: pick('Sărățele crocante preparate cu unt, telemea maturată și chimen sau mac, perfecte pentru echilibrarea gustului dulce al candy bar-ului.', 'Crisp savory crackers made with butter, matured local cheese, and cumin or poppy seeds, perfect to balance the sweet bar.', 'Ropogós sós rudak vajjal, érlelt sajttal és köménnyel vagy mákkal, tökéletesen kiegyensúlyozzák az édes candy bart.'),
       image: 'https://assets.boosteat.com/images/c165/2023-05-10/20230510120628212645b88c4558cb/image.jpeg'
     },
     {
-      name: isRo ? 'Tort de Prezentare (kg)' : 'Presentation Cake (kg)',
+      name: pick('Tort de Prezentare (kg)', 'Presentation Cake (kg)', 'Bemutató torta (kg)'),
       price: '150 RON',
-      desc: isRo 
-        ? 'Tort personalizat cu etaje pentru ocazii speciale, îmbrăcat în cremă fină de brânză și decorat cu flori naturale sau fructe.' 
-        : 'Custom multi-tiered cake for special occasions, coated in smooth cream cheese frosting and decorated with real flowers or fruits.',
+      desc: pick('Tort personalizat cu etaje pentru ocazii speciale, îmbrăcat în cremă fină de brânză și decorat cu flori naturale sau fructe.', 'Custom multi-tiered cake for special occasions, coated in smooth cream cheese frosting and decorated with real flowers or fruits.', 'Egyedi emeletes torta különleges alkalmakra, sima krémsajtos bevonattal és valódi virágokkal vagy gyümölcsökkel díszítve.'),
       image: 'https://assets.boosteat.com/images/c165/2023-05-10/20230510120548212645b889ca1dc8/image.jpeg'
     }
   ];
@@ -137,21 +127,30 @@ export default function CandyBar() {
       marturii: formServices.marturii
     });
     
-    const calculatedMessage = isRo 
-      ? `Recomandare calculată automat:
+    const calculatedMessage = language === 'hu'
+      ? `Automatikusan számolt ajánlás:
+- ${minicakesQty} Mini Cheesecake (vegyes ízek)
+- ${jarsQty} Poharas Cheesecake (120g)
+- ${macaronsQty} Prémium Macaron
+- ${pavlovasQty} Mini Pavlova
+${includeSaratle ? `- ${saratleQty} kg sós sajtos rúd\n` : ''}${includeCake ? `- ${cakeQty} kg bemutató torta\n` : ''}
+Becsült költség: kb. ${totalCostEstimate} RON.`
+      : language === 'en'
+      ? `Automatically calculated recommendation:
+- ${minicakesQty} Mini Cheesecakes (Mixed flavors)
+- ${jarsQty} Cheesecake jars (120g)
+- ${macaronsQty} Premium Macarons
+- ${pavlovasQty} Mini Pavlova
+${includeSaratle ? `- ${saratleQty} kg Savory cheese crackers\n` : ''}${includeCake ? `- Presentation cake: ${cakeQty} kg\n` : ''}
+Estimated budget: approx. ${totalCostEstimate} RON.`
+      : `Recomandare calculată automat:
 - ${minicakesQty} Mini Cheesecakes (Aromă mixtă)
 - ${jarsQty} Borcanele de Cheesecake (120g)
 - ${macaronsQty} Macarons Premium
 - ${pavlovasQty} Mini Pavlova
 ${includeSaratle ? `- ${saratleQty} kg Sărățele cu telemea\n` : ''}${includeCake ? `- Tort de prezentare de ${cakeQty} kg\n` : ''}
 Buget estimat: aprox. ${totalCostEstimate} RON.`
-      : `Automatically calculated recommendation:
-- ${minicakesQty} Mini Cheesecakes (Mixed flavors)
-- ${jarsQty} Cheesecake jars (120g)
-- ${macaronsQty} Premium Macarons
-- ${pavlovasQty} Mini Pavlova
-${includeSaratle ? `- ${saratleQty} kg Savory cheese crackers\n` : ''}${includeCake ? `- Presentation cake: ${cakeQty} kg\n` : ''}
-Estimated budget: approx. ${totalCostEstimate} RON.`;
+      ;
 
     setFormMessage(calculatedMessage);
     
@@ -166,7 +165,7 @@ Estimated budget: approx. ${totalCostEstimate} RON.`;
     e.preventDefault();
     setSubmitError('');
     if (!formName || !formPhone || !formEmail || !formDate) {
-      setSubmitError(isRo ? 'Vă rugăm să completați câmpurile obligatorii (*).' : 'Please fill in the required fields (*).');
+      setSubmitError(pick('Vă rugăm să completați câmpurile obligatorii (*).', 'Please fill in the required fields (*).', 'Kérjük, töltsd ki a kötelező mezőket (*).'));
       return;
     }
 
@@ -177,9 +176,9 @@ Estimated budget: approx. ${totalCostEstimate} RON.`;
       .join(', ');
     const composedMessage = [
       formMessage,
-      formTheme ? `${isRo ? 'Tematică' : 'Theme'}: ${formTheme}` : '',
-      selectedServices ? `${isRo ? 'Servicii' : 'Services'}: ${selectedServices}` : '',
-      formLocation ? `${isRo ? 'Locație' : 'Location'}: ${formLocation}` : '',
+      formTheme ? `${pick('Tematică', 'Theme', 'Téma')}: ${formTheme}` : '',
+      selectedServices ? `${pick('Servicii', 'Services', 'Szolgáltatások')}: ${selectedServices}` : '',
+      formLocation ? `${pick('Locație', 'Location', 'Helyszín')}: ${formLocation}` : '',
     ].filter(Boolean).join('\n');
 
     setSubmitting(true);
@@ -196,9 +195,7 @@ Estimated budget: approx. ${totalCostEstimate} RON.`;
       setFormSuccess(true);
     } catch (err) {
       console.error('createOfferRequest failed:', err);
-      setSubmitError(isRo
-        ? 'Nu am putut trimite solicitarea. Te rugăm să încerci din nou.'
-        : 'We could not send your request. Please try again.');
+      setSubmitError(pick('Nu am putut trimite solicitarea. Te rugăm să încerci din nou.', 'We could not send your request. Please try again.', 'Nem tudtuk elküldeni a kérésedet. Kérjük, próbáld újra.'));
     } finally {
       setSubmitting(false);
     }
@@ -210,21 +207,23 @@ Estimated budget: approx. ${totalCostEstimate} RON.`;
         
         {/* Header */}
         <div className="candybar-header text-center">
-          <span className="section-subtitle">{isRo ? 'Evenimente Memorabile' : 'Unforgettable Events'}</span>
+          <span className="section-subtitle">{pick('Evenimente Memorabile', 'Unforgettable Events', 'Emlékezetes Események')}</span>
           <h1 className="candybar-main-title">Candy Bar &amp; Torturi</h1>
           <div className="gold-divider"></div>
           <p className="candybar-intro">
-            {isRo 
-              ? 'Petrecerea perfectă presupune un mix alcătuit din foarte multe elemente, unul dintre acestea fiind candy bar-ul. De aceea, vrem să transformăm fiecare petrecere într-o poveste plină de savoare și culoare. Vă oferim consultanță în alegerea produselor preferate, pentru a crea decorul dorit, îmbinat cu tematica petrecerii.'
-              : 'The perfect party is a mix of many elements, and the candy bar is key. We want to transform every event into a story of flavor and color, providing full consulting to match your theme.'}
+            {pick(
+              'Petrecerea perfectă presupune un mix alcătuit din foarte multe elemente, unul dintre acestea fiind candy bar-ul. De aceea, vrem să transformăm fiecare petrecere într-o poveste plină de savoare și culoare. Vă oferim consultanță în alegerea produselor preferate, pentru a crea decorul dorit, îmbinat cu tematica petrecerii.',
+              'The perfect party is a mix of many elements, and the candy bar is key. We want to transform every event into a story of flavor and color, providing full consulting to match your theme.',
+              'A tökéletes esemény sok elemből áll, ezek közül az egyik legfontosabb a candy bar. Minden rendezvényt ízekkel és színekkel teli történetté szeretnénk alakítani, és segítünk a megfelelő termékek kiválasztásában.'
+            )}
           </p>
         </div>
 
         {/* Brochure Slide Carousel */}
         <div className="brochure-carousel-wrapper">
-          <h2 className="section-block-title">{isRo ? 'Catalogul Nostru Oficial (Broșură)' : 'Our Official Catalog Brochure'}</h2>
+          <h2 className="section-block-title">{pick('Catalogul Nostru Oficial (Broșură)', 'Our Official Catalog Brochure', 'Hivatalos katalógusunk')}</h2>
           <p className="section-block-desc">
-            {isRo ? 'Răsfoiește paginile ofertei noastre pentru a vizualiza recomandările și decorurile noastre.' : 'Flip through our catalog pages to see event decorations and setups.'}
+            {pick('Răsfoiește paginile ofertei noastre pentru a vizualiza recomandările și decorurile noastre.', 'Flip through our catalog pages to see event decorations and setups.', 'Lapozd át ajánlatunk oldalait, és nézd meg dekorációs és tálalási ötleteinket.')}
           </p>
           
           <div className="brochure-carousel">
@@ -257,16 +256,14 @@ Estimated budget: approx. ${totalCostEstimate} RON.`;
         <div className="calculator-section">
           <div className="calculator-card">
             <div className="calculator-controls">
-              <h3>⚡ {isRo ? 'Calculator de Cantități & Buget' : 'Quantity & Budget Calculator'}</h3>
+              <h3>⚡ {pick('Calculator de Cantități & Buget', 'Quantity & Budget Calculator', 'Mennyiség- és költségkalkulátor')}</h3>
               <p className="calc-note">
-                {isRo 
-                  ? 'Alege numărul de invitați pentru a calcula instant sortimentele ideale și costul estimativ:' 
-                  : 'Select your guest count to instantly calculate recommended items and estimated cost:'}
+                {pick('Alege numărul de invitați pentru a calcula instant sortimentele ideale și costul estimativ:', 'Select your guest count to instantly calculate recommended items and estimated cost:', 'Válaszd ki a vendégek számát, és azonnal kiszámoljuk az ajánlott mennyiségeket és a becsült költséget:')}
               </p>
               
               <div className="control-group">
                 <label className="slider-label">
-                  <span>👤 {isRo ? 'Număr Invitați:' : 'Number of Guests:'} <strong>{guestCount}</strong></span>
+                  <span>👤 {pick('Număr Invitați:', 'Number of Guests:', 'Vendégek száma:')} <strong>{guestCount}</strong></span>
                 </label>
                 <input 
                   type="range" 
@@ -293,7 +290,7 @@ Estimated budget: approx. ${totalCostEstimate} RON.`;
                     checked={includeCake} 
                     onChange={(e) => setIncludeCake(e.target.checked)} 
                   />
-                  <span>🎂 {isRo ? 'Include Tort de Prezentare (100g / invitat)' : 'Include Presentation Cake (100g / guest)'}</span>
+                  <span>🎂 {pick('Include Tort de Prezentare (100g / invitat)', 'Include Presentation Cake (100g / guest)', 'Tartalmazzon bemutató tortát (100g / vendég)')}</span>
                 </label>
                 
                 <label className="checkbox-label">
@@ -302,21 +299,21 @@ Estimated budget: approx. ${totalCostEstimate} RON.`;
                     checked={includeSaratle} 
                     onChange={(e) => setIncludeSaratle(e.target.checked)} 
                   />
-                  <span>🥨 {isRo ? 'Include Sărățele cu Telemea (15g / invitat)' : 'Include Savory Cheese Crackers (15g / guest)'}</span>
+                  <span>🥨 {pick('Include Sărățele cu Telemea (15g / invitat)', 'Include Savory Cheese Crackers (15g / guest)', 'Tartalmazzon sós sajtos rudakat (15g / vendég)')}</span>
                 </label>
               </div>
 
               <button className="apply-calc-btn" onClick={applyCalculatorToForm}>
-                📋 {isRo ? 'Aplică recomandarea în Formular' : 'Apply recommendation to Quote Form'}
+                📋 {pick('Aplică recomandarea în Formular', 'Apply recommendation to Quote Form', 'Ajánlás átvitele az űrlapba')}
               </button>
             </div>
 
             <div className="calculator-results">
-              <h4>📋 {isRo ? 'Configurație Recomandată' : 'Recommended Configuration'}</h4>
+              <h4>📋 {pick('Configurație Recomandată', 'Recommended Configuration', 'Ajánlott összeállítás')}</h4>
               <div className="results-list">
                 <div className="result-item">
                   <span className="item-qty">{minicakesQty}x</span>
-                  <span className="item-name">Mini Cheesecakes ({isRo ? 'diverse arome' : 'mixed flavors'})</span>
+                  <span className="item-name">Mini Cheesecakes ({pick('diverse arome', 'mixed flavors', 'vegyes ízek')})</span>
                   <span className="item-cost">{minicakesCost} RON</span>
                 </div>
                 <div className="result-item">
@@ -337,25 +334,25 @@ Estimated budget: approx. ${totalCostEstimate} RON.`;
                 {includeSaratle && (
                   <div className="result-item">
                     <span className="item-qty">{saratleQty} kg</span>
-                    <span className="item-name">{isRo ? 'Sărățele cu telemea' : 'Cheese crackers'}</span>
+                    <span className="item-name">{pick('Sărățele cu telemea', 'Cheese crackers', 'Sós sajtos rudak')}</span>
                     <span className="item-cost">{saratleCost} RON</span>
                   </div>
                 )}
                 {includeCake && (
                   <div className="result-item highlight">
                     <span className="item-qty">{cakeQty} kg</span>
-                    <span className="item-name">{isRo ? 'Tort etajat de prezentare' : 'Presentation tiered cake'}</span>
+                    <span className="item-name">{pick('Tort etajat de prezentare', 'Presentation tiered cake', 'Bemutató emeletes torta')}</span>
                     <span className="item-cost">{cakeCost} RON</span>
                   </div>
                 )}
               </div>
               
               <div className="results-total">
-                <span className="total-label">{isRo ? 'Buget Estimativ:' : 'Estimated Cost:'}</span>
+                <span className="total-label">{pick('Buget Estimativ:', 'Estimated Cost:', 'Becsült költség:')}</span>
                 <span className="total-price">{totalCostEstimate} RON</span>
               </div>
               <span className="calc-disclosure">
-                * {isRo ? 'Prețul final poate varia în funcție de personalizări, decoruri și transport.' : 'Final cost may vary based on customization, decorations, and transport.'}
+                * {pick('Prețul final poate varia în funcție de personalizări, decoruri și transport.', 'Final cost may vary based on customization, decorations, and transport.', 'A végső ár a személyre szabás, dekoráció és szállítás függvényében változhat.')}
               </span>
             </div>
           </div>
@@ -363,9 +360,9 @@ Estimated budget: approx. ${totalCostEstimate} RON.`;
 
         {/* A-La-Carte Catalog Grid */}
         <div className="candy-catalog-wrapper">
-          <h2 className="section-block-title">{isRo ? 'Meniu A-La-Carte & Prețuri' : 'A-La-Carte Menu & Prices'}</h2>
+          <h2 className="section-block-title">{pick('Meniu A-La-Carte & Prețuri', 'A-La-Carte Menu & Prices', 'A la carte menü és árak')}</h2>
           <p className="section-block-desc">
-            {isRo ? 'Sortimentele noastre premium care pot fi configurate liber în compoziția candy bar-ului tău.' : 'Our premium sweets that can be customized freely for your special candy bar.'}
+            {pick('Sortimentele noastre premium care pot fi configurate liber în compoziția candy bar-ului tău.', 'Our premium sweets that can be customized freely for your special candy bar.', 'Prémium desszertjeink, amelyek szabadon összeállíthatók a saját candy barodhoz.')}
           </p>
           
           <div className="candy-catalog-grid">
@@ -389,45 +386,41 @@ Estimated budget: approx. ${totalCostEstimate} RON.`;
         {/* Quote Request Form */}
         <div id="quote-form-section" className="quote-form-wrapper">
           <div className="form-card">
-            <h3>✉️ {isRo ? 'Solicită o Ofertă Personalizată' : 'Request a Personalized Quote'}</h3>
+            <h3>✉️ {pick('Solicită o Ofertă Personalizată', 'Request a Personalized Quote', 'Kérj személyre szabott ajánlatot')}</h3>
             <p>
-              {isRo 
-                ? 'Trimite-ne un mesaj cu detaliile evenimentului tău, iar noi îți răspundem în cel mai scurt timp cu o ofertă dedicată.' 
-                : 'Send us details about your event, and we will get back to you with a tailored offer.'}
+              {pick('Trimite-ne un mesaj cu detaliile evenimentului tău, iar noi îți răspundem în cel mai scurt timp cu o ofertă dedicată.', 'Send us details about your event, and we will get back to you with a tailored offer.', 'Küldd el nekünk az eseményed részleteit, és hamarosan személyre szabott ajánlattal jelentkezünk.')}
             </p>
             
             {formSuccess ? (
               <div className="form-success-container animate-fade-in">
                 <span className="success-icon">🎉</span>
-                <h4>{isRo ? 'Solicitare Trimisă cu Succes!' : 'Quote Request Sent Successfully!'}</h4>
+                <h4>{pick('Solicitare Trimisă cu Succes!', 'Quote Request Sent Successfully!', 'Az ajánlatkérés sikeresen elküldve!')}</h4>
                 <p>
-                  {isRo 
-                    ? 'Îți mulțumim pentru interes! Un consultant The Cheesecake House te va contacta telefonic sau prin e-mail în maxim 24 de ore.' 
-                    : 'Thank you! A Cheesecake House event specialist will contact you via phone or email within 24 hours.'}
+                  {pick('Îți mulțumim pentru interes! Un consultant The Cheesecake House te va contacta telefonic sau prin e-mail în maxim 24 de ore.', 'Thank you! A Cheesecake House event specialist will contact you via phone or email within 24 hours.', 'Köszönjük az érdeklődést! A The Cheesecake House egyik tanácsadója 24 órán belül telefonon vagy emailben felveszi veled a kapcsolatot.')}
                 </p>
                 <button className="reset-btn" onClick={() => setFormSuccess(false)}>
-                  {isRo ? 'Trimite o altă solicitare' : 'Send another request'}
+                  {pick('Trimite o altă solicitare', 'Send another request', 'Küldj másik kérést')}
                 </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="quote-form">
                 <div className="form-grid">
                   <div className="form-group">
-                    <label>{isRo ? 'Nume Contact *' : 'Contact Name *'}</label>
+                    <label>{pick('Nume Contact *', 'Contact Name *', 'Kapcsolattartó neve *')}</label>
                     <input 
                       type="text" 
                       required 
-                      placeholder={isRo ? 'Ex: Maria Ionescu' : 'e.g. John Doe'}
+                      placeholder={pick('Ex: Maria Ionescu', 'e.g. John Doe', 'pl. Kiss Anna')}
                       value={formName}
                       onChange={(e) => setFormName(e.target.value)}
                     />
                   </div>
                   <div className="form-group">
-                    <label>{isRo ? 'Număr Contact *' : 'Contact Phone *'}</label>
+                    <label>{pick('Număr Contact *', 'Contact Phone *', 'Kapcsolati telefonszám *')}</label>
                     <input 
                       type="tel" 
                       required 
-                      placeholder="Ex: 07xx xxx xxx"
+                      placeholder={pick('Ex: 07xx xxx xxx', 'e.g. 07xx xxx xxx', 'pl. 07xx xxx xxx')}
                       value={formPhone}
                       onChange={(e) => setFormPhone(e.target.value)}
                     />
@@ -437,13 +430,13 @@ Estimated budget: approx. ${totalCostEstimate} RON.`;
                     <input 
                       type="email" 
                       required 
-                      placeholder="Ex: maria@example.com"
+                      placeholder={pick('Ex: maria@example.com', 'e.g. maria@example.com', 'pl. anna@example.com')}
                       value={formEmail}
                       onChange={(e) => setFormEmail(e.target.value)}
                     />
                   </div>
                   <div className="form-group">
-                    <label>{isRo ? 'Data Evenimentului *' : 'Event Date *'}</label>
+                    <label>{pick('Data Evenimentului *', 'Event Date *', 'Esemény dátuma *')}</label>
                     <input 
                       type="date" 
                       required 
@@ -452,19 +445,19 @@ Estimated budget: approx. ${totalCostEstimate} RON.`;
                     />
                   </div>
                   <div className="form-group">
-                    <label>{isRo ? 'Locația Evenimentului *' : 'Event Location *'}</label>
+                    <label>{pick('Locația Evenimentului *', 'Event Location *', 'Esemény helyszíne *')}</label>
                     <select value={formLocation} onChange={(e) => setFormLocation(e.target.value)}>
                       <option value="Cluj-Napoca">Cluj-Napoca</option>
                       <option value="Târgu Mureș">Târgu Mureș</option>
                       <option value="Bistrița">Bistrița</option>
-                      <option value="Alta">Alta (În afara acestor orașe)</option>
+                      <option value="Alta">{pick('Alta (În afara acestor orașe)', 'Other (outside these cities)', 'Más helyszín (ezeken a városokon kívül)')}</option>
                     </select>
                   </div>
                   <div className="form-group">
-                    <label>{isRo ? 'Număr Invitați' : 'Guest Count'}</label>
+                    <label>{pick('Număr Invitați', 'Guest Count', 'Vendégek száma')}</label>
                     <input 
                       type="number" 
-                      placeholder="Ex: 100"
+                      placeholder={pick('Ex: 100', 'e.g. 100', 'pl. 100')}
                       value={formGuestsInput}
                       onChange={(e) => setFormGuestsInput(e.target.value)}
                     />
@@ -472,7 +465,7 @@ Estimated budget: approx. ${totalCostEstimate} RON.`;
                 </div>
 
                 <div className="form-group options-group">
-                  <label>{isRo ? 'Servicii Dorite' : 'Requested Services'}</label>
+                  <label>{pick('Servicii Dorite', 'Requested Services', 'Kért szolgáltatások')}</label>
                   <div className="checkbox-row">
                     <label className="checkbox-item">
                       <input 
@@ -488,7 +481,7 @@ Estimated budget: approx. ${totalCostEstimate} RON.`;
                         checked={formServices.tortPrezentare} 
                         onChange={(e) => setFormServices({...formServices, tortPrezentare: e.target.checked})}
                       />
-                      <span>{isRo ? 'Tort de prezentare' : 'Presentation cake'}</span>
+                      <span>{pick('Tort de prezentare', 'Presentation cake', 'Bemutató torta')}</span>
                     </label>
                     <label className="checkbox-item">
                       <input 
@@ -496,26 +489,26 @@ Estimated budget: approx. ${totalCostEstimate} RON.`;
                         checked={formServices.marturii} 
                         onChange={(e) => setFormServices({...formServices, marturii: e.target.checked})}
                       />
-                      <span>{isRo ? 'Mărturii dulci' : 'Sweet favors / testimonials'}</span>
+                      <span>{pick('Mărturii dulci', 'Sweet favors / testimonials', 'Édes ajándékok')}</span>
                     </label>
                   </div>
                 </div>
 
                 <div className="form-group">
-                  <label>{isRo ? 'Tematica sau Schema Cromatica' : 'Theme or Color Palette'}</label>
+                  <label>{pick('Tematica sau Schema Cromatica', 'Theme or Color Palette', 'Téma vagy színpaletta')}</label>
                   <input 
                     type="text" 
-                    placeholder={isRo ? 'Ex: Boho-chic, Elegance Gold, Roșu regal' : 'e.g. Vintage, Emerald green, Pastel pink'}
+                    placeholder={pick('Ex: Boho-chic, Elegance Gold, Roșu regal', 'e.g. Vintage, Emerald green, Pastel pink', 'pl. Boho-chic, arany elegancia, királyi vörös')}
                     value={formTheme}
                     onChange={(e) => setFormTheme(e.target.value)}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label>{isRo ? 'Mesaj / Observații' : 'Message / Special Notes'}</label>
+                  <label>{pick('Mesaj / Observații', 'Message / Special Notes', 'Üzenet / Megjegyzések')}</label>
                   <textarea 
                     rows="5" 
-                    placeholder={isRo ? 'Aici puteți adăuga detalii speciale despre locație, preferințe pentru arome sau alergii.' : 'Add notes regarding venue, flavor preferences or allergies here.'}
+                    placeholder={pick('Aici puteți adăuga detalii speciale despre locație, preferințe pentru arome sau alergii.', 'Add notes regarding venue, flavor preferences or allergies here.', 'Itt adhatsz meg különleges helyszíni részleteket, ízpreferenciákat vagy allergiákat.')}
                     value={formMessage}
                     onChange={(e) => setFormMessage(e.target.value)}
                   ></textarea>
@@ -526,9 +519,7 @@ Estimated budget: approx. ${totalCostEstimate} RON.`;
                 )}
 
                 <button type="submit" className="form-submit-btn" disabled={submitting}>
-                  ✨ {submitting
-                    ? (isRo ? 'Se trimite...' : 'Sending...')
-                    : (isRo ? 'Trimite Solicitarea' : 'Send Quote Request')}
+                  ✨ {submitting ? t('sendingGeneric') : pick('Trimite Solicitarea', 'Send Quote Request', 'Ajánlatkérés elküldése')}
                 </button>
               </form>
             )}

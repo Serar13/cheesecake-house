@@ -58,8 +58,7 @@ const STATIC_FLOOR_PLANS = {
 };
 
 export default function Reservations() {
-  const { language, currentUser, setShowAuthModal } = useApp();
-  const isRo = language === 'ro';
+  const { currentUser, setShowAuthModal, t, language } = useApp();
 
   // Locations loaded from Firestore (name, phone, address only).
   const [locations, setLocations] = useState([]);
@@ -136,16 +135,12 @@ export default function Reservations() {
     }
 
     if (!formName || !formPhone || !formEmail || !formDate || !formTime || !selectedLocId) {
-      setFormError(isRo
-        ? 'Vă rugăm să completați toate câmpurile obligatorii (*).'
-        : 'Please fill in all the required fields (*).');
+      setFormError(t('reservationsErrorRequired'));
       return;
     }
 
     if (!selectedTableId) {
-      setFormError(isRo
-        ? 'Vă rugăm să selectați o masă.'
-        : 'Please select a table.');
+      setFormError(t('reservationsErrorTable'));
       return;
     }
 
@@ -159,9 +154,7 @@ export default function Reservations() {
       });
 
       if (conflict) {
-        setFormError(isRo
-          ? 'Masa selectată este deja rezervată la această dată și oră. Te rugăm să alegi alt interval sau altă masă.'
-          : 'The selected table is already booked for this date and time. Please choose another slot or table.');
+        setFormError(t('reservationsErrorConflict'));
         setSubmitting(false);
         return;
       }
@@ -183,26 +176,20 @@ export default function Reservations() {
       setFormSuccess(true);
     } catch (err) {
       console.error('createReservation failed:', err);
-      setFormError(isRo
-        ? 'Nu am putut înregistra rezervarea. Te rugăm să încerci din nou.'
-        : 'We could not submit your reservation. Please try again.');
+      setFormError(t('reservationsErrorSubmit'));
     } finally {
       setSubmitting(false);
     }
   };
 
-  const guestOptions = [
-    { value: '1', label: isRo ? '1 Persoană' : '1 Person' },
-    { value: '2', label: isRo ? '2 Persoane' : '2 People' },
-    { value: '3', label: isRo ? '3 Persoane' : '3 People' },
-    { value: '4', label: isRo ? '4 Persoane' : '4 People' },
-    { value: '5', label: isRo ? '5 Persoane' : '5 People' },
-    { value: '6', label: isRo ? '6 Persoane' : '6 People' },
-    { value: '7', label: isRo ? '7 Persoane' : '7 People' },
-    { value: '8', label: isRo ? '8 Persoane' : '8 People' },
-    { value: '9', label: isRo ? '9 Persoane' : '9 People' },
-    { value: '10+', label: isRo ? 'Grup mare (10+ persoane)' : 'Large Group (10+ people)' },
-  ];
+  const guestOptions = Array.from({ length: 9 }, (_, index) => {
+    const value = String(index + 1);
+    const suffix = language === 'hu' ? 'fő' : language === 'en' ? (index === 0 ? 'Person' : 'People') : (index === 0 ? 'Persoană' : 'Persoane');
+    return { value, label: `${value} ${suffix}` };
+  }).concat({
+    value: '10+',
+    label: language === 'hu' ? 'Nagy csoport (10+ fő)' : language === 'en' ? 'Large Group (10+ people)' : 'Grup mare (10+ persoane)',
+  });
 
   const timeOptions = [
     '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'
@@ -214,14 +201,10 @@ export default function Reservations() {
 
         {/* Header */}
         <div className="reservations-header text-center">
-          <span className="section-subtitle">{isRo ? 'Rezervă o Masă' : 'Book a Table'}</span>
-          <h1 className="reservations-main-title">{isRo ? 'Rezervări' : 'Reservations'}</h1>
+          <span className="section-subtitle">{t('reservationsSubtitle')}</span>
+          <h1 className="reservations-main-title">{t('reservationsTitle')}</h1>
           <div className="gold-divider"></div>
-          <p className="reservations-intro">
-            {isRo
-              ? 'Te așteptăm cu drag în cofetăriile noastre primitoare. Rezervă o masă din timp pentru a te asigura că savurezi cheesecake-ul tău preferat alături de cei dragi.'
-              : 'We welcome you to our cozy shops. Reserve a table in advance to ensure you enjoy your favorite cheesecake with friends and family.'}
-          </p>
+          <p className="reservations-intro">{t('reservationsIntro')}</p>
         </div>
 
         <div className="reservations-card-wrapper">
@@ -230,16 +213,16 @@ export default function Reservations() {
             {/* Top location & Phone info */}
             <div className="reservations-meta-top">
               <div className="location-select-group">
-                <label className="input-label-meta">{isRo ? 'Alege Locația' : 'Choose Location'}</label>
+                <label className="input-label-meta">{t('reservationsChooseLocation')}</label>
                 <select
                   value={selectedLocId}
                   onChange={(e) => setSelectedLocId(e.target.value)}
                   className="location-meta-select"
                   disabled={locationsLoading || locations.length === 0}
                 >
-                  {locationsLoading && <option>{isRo ? 'Se încarcă...' : 'Loading...'}</option>}
+                  {locationsLoading && <option>{t('loadingGeneric')}</option>}
                   {!locationsLoading && locations.length === 0 && (
-                    <option>{isRo ? 'Nicio locație disponibilă' : 'No locations available'}</option>
+                    <option>{t('reservationsNoLocations')}</option>
                   )}
                   {locations.map((loc) => (
                     <option key={loc.id} value={loc.id}>{loc.name}</option>
@@ -250,7 +233,7 @@ export default function Reservations() {
               {activeLocation && activeLocation.phone && (
                 <div className="phone-reservation-banner">
                   <div className="phone-banner-content">
-                    <span className="phone-banner-label">{isRo ? 'Rezervări telefonice:' : 'Phone bookings:'}</span>
+                    <span className="phone-banner-label">{t('reservationsPhoneBookings')}</span>
                     <a href={`tel:${activeLocation.phone.replace(/\s+/g, '')}`} className="phone-banner-number">
                       {activeLocation.phone}
                     </a>
@@ -265,42 +248,36 @@ export default function Reservations() {
             {formSuccess ? (
               <div className="reservation-success-container animate-fade-in">
                 <span className="success-badge-icon">🎉</span>
-                <h3>{isRo ? 'Rezervare Înregistrată!' : 'Reservation Submitted!'}</h3>
+                <h3>{t('reservationsSuccessTitle')}</h3>
                 <p className="success-summary">
-                  {isRo
-                    ? `Te așteptăm la ${activeLocation ? activeLocation.name.replace('The Cheesecake House ', '') : ''} pe data de ${formDate} la ora ${formTime} (${formGuests} persoane).`
-                    : `We are waiting for you at ${activeLocation ? activeLocation.name.replace('The Cheesecake House ', '') : ''} on ${formDate} at ${formTime} (${formGuests} people).`}
+                  {`${t('reservationsSuccessSummaryPrefix')} ${activeLocation ? activeLocation.name.replace('The Cheesecake House ', '') : ''} ${t('reservationsSuccessSummaryMiddle')} ${formDate} ${t('reservationsSuccessSummaryAt')} ${formTime} (${formGuests} ${t('reservationsSuccessPeople')}).`}
                 </p>
                 {selectedTableObj && (
                   <p className="success-table-summary">
-                    📍 {isRo ? `Masa ta selectată: ${selectedTableObj.name}` : `Your selected table: ${selectedTableObj.name}`}
+                    📍 {`${t('reservationsSelectedTable')} ${selectedTableObj.name}`}
                   </p>
                 )}
-                <p className="success-desc">
-                  {isRo
-                    ? 'Rezervarea ta este în așteptarea confirmării. Te vom contacta în scurt timp.'
-                    : 'Your reservation is pending confirmation. We will contact you shortly.'}
-                </p>
+                <p className="success-desc">{t('reservationsSuccessDesc')}</p>
                 <button className="reset-reservation-btn" onClick={() => setFormSuccess(false)}>
-                  {isRo ? 'Efectuează o altă rezervare' : 'Book another table'}
+                  {t('reservationsBookAnother')}
                 </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="reservations-form">
 
                 <div className="form-group-item">
-                  <label>{isRo ? 'Numele tău *' : 'Your name *'}</label>
+                  <label>{t('reservationsName')}</label>
                   <input
                     type="text"
                     required
-                    placeholder={isRo ? 'Ex: Mihai Popescu' : 'e.g. John Smith'}
+                    placeholder={t('reservationsNamePlaceholder')}
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
                   />
                 </div>
 
                 <div className="form-group-item">
-                  <label>{isRo ? 'Telefon *' : 'Phone *'}</label>
+                  <label>{t('reservationsPhone')}</label>
                   <div className="phone-input-with-flag">
                     <div className="flag-container">
                       <span className="romania-flag">🇷🇴</span>
@@ -309,7 +286,7 @@ export default function Reservations() {
                     <input
                       type="tel"
                       required
-                      placeholder="Ex: 7xx xxx xxx"
+                      placeholder={t('reservationsPhonePlaceholder')}
                       value={formPhone}
                       onChange={(e) => setFormPhone(e.target.value)}
                     />
@@ -317,18 +294,18 @@ export default function Reservations() {
                 </div>
 
                 <div className="form-group-item">
-                  <label>{isRo ? 'Email *' : 'Email *'}</label>
+                  <label>{t('reservationsEmail')}</label>
                   <input
                     type="email"
                     required
-                    placeholder="Ex: mihaipopescu@example.com"
+                    placeholder={t('reservationsEmailPlaceholder')}
                     value={formEmail}
                     onChange={(e) => setFormEmail(e.target.value)}
                   />
                 </div>
 
                 <div className="form-group-item">
-                  <label>{isRo ? 'Numărul de persoane' : 'Number of Guests'}</label>
+                  <label>{t('reservationsGuests')}</label>
                   <select value={formGuests} onChange={(e) => setFormGuests(e.target.value)}>
                     {guestOptions.map(opt => (
                       <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -338,7 +315,7 @@ export default function Reservations() {
 
                 <div className="form-double-column">
                   <div className="form-group-item">
-                    <label>{isRo ? 'Ziua *' : 'Date *'}</label>
+                    <label>{t('reservationsDate')}</label>
                     <input
                       type="date"
                       required
@@ -348,7 +325,7 @@ export default function Reservations() {
                   </div>
 
                   <div className="form-group-item">
-                    <label>{isRo ? 'Ora *' : 'Time *'}</label>
+                    <label>{t('reservationsTime')}</label>
                     <select value={formTime} onChange={(e) => setFormTime(e.target.value)}>
                       {timeOptions.map(time => (
                         <option key={time} value={time}>{time}</option>
@@ -360,16 +337,14 @@ export default function Reservations() {
                 {/* Static floor-plan table selection */}
                 <div className="seating-map-group">
                   <label className="map-group-label">
-                    🪑 {isRo ? 'Selectează Masa' : 'Select a Table'}
+                    🪑 {t('reservationsSelectTable')}
                   </label>
                   <p className="map-group-desc">
-                    {isRo
-                      ? 'Alege masa preferată pentru rezervarea ta.'
-                      : 'Pick your preferred table for this reservation.'}
+                    {t('reservationsSelectTableDesc')}
                   </p>
 
                   {tables.length === 0 ? (
-                    <p>{isRo ? 'Nicio masă disponibilă pentru această locație.' : 'No tables available for this location.'}</p>
+                    <p>{t('reservationsNoTables')}</p>
                   ) : (
                     <div
                       className={`floor-plan-map location-map-${selectedLocId || 'default'}`}
@@ -386,7 +361,7 @@ export default function Reservations() {
                             className={`table-node ${isSelected ? 'selected' : ''}`}
                             style={{ left: `${x}%`, top: `${y}%` }}
                             onClick={() => handleTableClick(table)}
-                            title={`${table.name}${table.seats ? ` - ${table.seats} ${isRo ? 'locuri' : 'seats'}` : ''}`}
+                            title={`${table.name}${table.seats ? ` - ${table.seats} ${t('reservationsSeats')}` : ''}`}
                           >
                             <span className="table-label-node">{table.name}</span>
                             {table.seats != null && (
@@ -401,25 +376,23 @@ export default function Reservations() {
 
                   {tables.length > 0 && (
                     <div className="map-legend">
-                      <span className="legend-item"><span className="legend-color free"></span>{isRo ? 'Disponibilă' : 'Available'}</span>
-                      <span className="legend-item"><span className="legend-color selected"></span>{isRo ? 'Selectată' : 'Selected'}</span>
+                      <span className="legend-item"><span className="legend-color free"></span>{t('reservationsAvailable')}</span>
+                      <span className="legend-item"><span className="legend-color selected"></span>{t('reservationsSelected')}</span>
                     </div>
                   )}
 
                   {selectedTableObj && (
                     <div className="selected-table-callout animate-fade-in">
-                      🎉 {isRo
-                        ? `Ai selectat ${selectedTableObj.name}${selectedTableObj.seats ? ` (${selectedTableObj.seats} locuri)` : ''}.`
-                        : `You selected ${selectedTableObj.name}${selectedTableObj.seats ? ` (${selectedTableObj.seats} seats)` : ''}.`}
+                      🎉 {`${t('reservationsSelectedCalloutPrefix')} ${selectedTableObj.name}${selectedTableObj.seats ? ` (${selectedTableObj.seats} ${t('reservationsSeats')})` : ''}.`}
                     </div>
                   )}
                 </div>
 
                 <div className="form-group-item">
-                  <label>{isRo ? 'Mesajul tău' : 'Your message'}</label>
+                  <label>{t('reservationsMessage')}</label>
                   <textarea
                     rows="4"
-                    placeholder={isRo ? 'Adaugă mențiuni speciale, de ex. preferințe pentru masă de fumători/nefumători, scaun pentru copii.' : 'Add special requests, e.g. window table, child seat.'}
+                    placeholder={t('reservationsMessagePlaceholder')}
                     value={formMessage}
                     onChange={(e) => setFormMessage(e.target.value)}
                   ></textarea>
@@ -427,9 +400,7 @@ export default function Reservations() {
 
                 {!currentUser && (
                   <p className="map-group-desc">
-                    🔒 {isRo
-                      ? 'Trebuie să fii autentificat pentru a trimite o rezervare.'
-                      : 'You must be signed in to submit a reservation.'}
+                    🔒 {t('reservationsAuthHint')}
                   </p>
                 )}
 
@@ -438,9 +409,7 @@ export default function Reservations() {
                 )}
 
                 <button type="submit" className="reservations-submit-btn" disabled={submitting}>
-                  ✨ {submitting
-                    ? (isRo ? 'Se trimite...' : 'Submitting...')
-                    : (isRo ? 'Trimite' : 'Submit Booking')}
+                  ✨ {submitting ? t('reservationsSubmitting') : t('reservationsSubmit')}
                 </button>
               </form>
             )}

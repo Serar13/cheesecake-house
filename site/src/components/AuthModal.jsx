@@ -36,28 +36,28 @@ export default function AuthModal() {
   const getFriendlyError = (errorCode) => {
     switch (errorCode) {
       case 'auth/email-already-in-use':
-        return 'Această adresă de email este deja utilizată de un alt cont.';
+        return t('authErrorEmailInUse');
       case 'auth/invalid-email':
-        return 'Adresa de email introdusă nu este validă.';
+        return t('authErrorInvalidEmail');
       case 'auth/operation-not-allowed':
-        return 'Metoda de conectare nu este activată în consolă.';
+        return t('authErrorMethodDisabled');
       case 'auth/weak-password':
-        return 'Parola aleasă este prea slabă. Alege o parolă de cel puțin 6 caractere.';
+        return t('authErrorWeakPassword');
       case 'auth/user-disabled':
-        return 'Acest cont a fost dezactivat.';
+        return t('authErrorUserDisabled');
       case 'auth/user-not-found':
-        return 'Nu am găsit niciun cont înregistrat cu această adresă de email.';
+        return t('authErrorUserNotFound');
       case 'auth/wrong-password':
       case 'auth/invalid-credential':
-        return 'Email sau parolă incorectă. Te rugăm să încerci din nou.';
+        return t('authErrorWrongCredentials');
       case 'auth/too-many-requests':
-        return 'Prea multe încercări eșuate. Contul a fost blocat temporar. Încearcă mai târziu.';
+        return t('authErrorTooManyRequests');
       case 'auth/popup-closed-by-user':
-        return 'Fereastra de conectare a fost închisă înainte de finalizare.';
+        return t('authErrorPopupClosed');
       case 'permission-denied':
-        return 'Eroare de permisiuni (insufficient permissions) în Firestore. Te rugăm să activezi regulile de citire/scriere pentru utilizatori în Consola Firebase.';
+        return t('authErrorPermissions');
       default:
-        return 'A apărut o eroare neașteptată. Te rugăm să încerci din nou.';
+        return t('authErrorUnexpected');
     }
   };
 
@@ -73,7 +73,7 @@ export default function AuthModal() {
         await register(name, email, phone, password);
       } else if (activeTab === 'forgot') {
         await resetPassword(email);
-        setSuccess('Un email de resetare a parolei a fost trimis pe adresa ta. Te rugăm să verifici folderul Inbox sau Spam.');
+        setSuccess(t('authResetSuccess'));
       }
     } catch (err) {
       console.error("Auth error:", err);
@@ -136,11 +136,9 @@ export default function AuthModal() {
         {/* Logo/Header */}
         <div className="auth-header text-center">
           <img src="https://assets.boosteat.com/images/c165/2023-03-21/20230321093311212641979d71009f/logo.png" alt="Logo" className="auth-logo" />
-          <h3>The Cheesecake House</h3>
+          <h3>{t('authTitle')}</h3>
           <p>
-            {activeTab === 'forgot' 
-              ? 'Recuperare parolă cont' 
-              : 'Autentifică-te pentru a plasa comanda'}
+            {activeTab === 'forgot' ? t('authForgotSubtitle') : t('authDefaultSubtitle')}
           </p>
         </div>
 
@@ -152,14 +150,14 @@ export default function AuthModal() {
               onClick={() => handleTabChange('login')}
               disabled={loading}
             >
-              Conectare
+              {t('authLoginTab')}
             </button>
             <button 
               className={`auth-tab ${activeTab === 'register' ? 'active' : ''}`}
               onClick={() => handleTabChange('register')}
               disabled={loading}
             >
-              Cont nou
+              {t('authRegisterTab')}
             </button>
           </div>
         )}
@@ -173,26 +171,26 @@ export default function AuthModal() {
           <div className={`auth-expandable-section ${activeTab === 'register' ? 'expanded' : ''}`}>
             <div className="auth-expandable-content">
               <div className="auth-field">
-                <label htmlFor="reg-name">Nume Complet</label>
+                <label htmlFor="reg-name">{t('authRegisterName')}</label>
                 <input 
                   type="text" 
                   id="reg-name" 
                   required={activeTab === 'register'} 
                   value={name} 
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Ex: Popescu Andrei"
+                  placeholder={t('authRegisterNamePlaceholder')}
                   disabled={loading}
                 />
               </div>
               <div className="auth-field">
-                <label htmlFor="reg-phone">Număr Telefon</label>
+                <label htmlFor="reg-phone">{t('authRegisterPhone')}</label>
                 <input 
                   type="tel" 
                   id="reg-phone" 
                   required={activeTab === 'register'} 
                   value={phone} 
                   onChange={(e) => setPhone(e.target.value)}
-                  placeholder="Ex: 0755 123 456"
+                  placeholder={t('authRegisterPhonePlaceholder')}
                   disabled={loading}
                 />
               </div>
@@ -200,14 +198,14 @@ export default function AuthModal() {
           </div>
 
           <div className="auth-field">
-            <label htmlFor="auth-email">Adresă Email</label>
+            <label htmlFor="auth-email">{t('authEmail')}</label>
             <input 
               type="email" 
               id="auth-email" 
               required 
               value={email} 
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Ex: andrei@example.com"
+              placeholder={t('authEmailPlaceholder')}
               disabled={loading}
             />
           </div>
@@ -215,7 +213,7 @@ export default function AuthModal() {
           {/* Password field - hidden in forgot password mode */}
           {activeTab !== 'forgot' && (
             <div className="auth-field">
-              <label htmlFor="auth-pass">Parolă</label>
+              <label htmlFor="auth-pass">{t('authPassword')}</label>
               <div className="auth-password-wrapper">
                 <input 
                   type={showPassword ? "text" : "password"} 
@@ -231,7 +229,7 @@ export default function AuthModal() {
                   className="auth-password-toggle" 
                   onClick={() => setShowPassword(!showPassword)}
                   disabled={loading}
-                  aria-label={showPassword ? "Ascunde parola" : "Afișează parola"}
+                  aria-label={showPassword ? t('authHidePassword') : t('authShowPassword')}
                 >
                   {showPassword ? (
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="auth-eye-icon">
@@ -253,19 +251,19 @@ export default function AuthModal() {
                   onClick={() => handleTabChange('forgot')}
                   disabled={loading}
                 >
-                  Ai uitat parola?
+                  {t('authForgotPassword')}
                 </button>
               )}
             </div>
           )}
 
           <button type="submit" className="auth-submit-btn" disabled={loading}>
-            {loading ? 'Se încarcă...' : (
+            {loading ? t('authLoading') : (
               activeTab === 'login' 
-                ? 'Conectează-te' 
+                ? t('authLoginAction')
                 : activeTab === 'register' 
-                  ? 'Creează contul' 
-                  : 'Trimite email de resetare'
+                  ? t('authRegisterAction')
+                  : t('authResetAction')
             )}
           </button>
           
@@ -276,7 +274,7 @@ export default function AuthModal() {
               onClick={() => handleTabChange('login')}
               disabled={loading}
             >
-              Înapoi la conectare
+              {t('authBackToLogin')}
             </button>
           )}
         </form>
@@ -285,7 +283,7 @@ export default function AuthModal() {
         {activeTab !== 'forgot' && (
           <div className="auth-social-section">
             <div className="auth-social-divider">
-              <span>sau conectează-te cu</span>
+              <span>{t('authSocialDivider')}</span>
             </div>
             
             <div className="auth-social-buttons">

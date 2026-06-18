@@ -82,7 +82,7 @@ export default function CartSidebar() {
       setOrderSuccess(true);
     } catch (err) {
       console.error('createOrder failed:', err);
-      setSubmitError('Nu am putut plasa comanda. Te rugăm să încerci din nou.');
+      setSubmitError(t('formSubmitError'));
     } finally {
       setSubmitting(false);
     }
@@ -122,7 +122,7 @@ export default function CartSidebar() {
               ) : (
                 <p><strong>{t('orderSuccessPickup')}</strong> {selectedStore?.address}</p>
               )}
-              <p className="success-total">Total: <strong>{grandTotal.toFixed(2)} RON</strong></p>
+              <p className="success-total">{t('totalShortLabel')} <strong>{grandTotal.toFixed(2)} RON</strong></p>
             </div>
             <button className="success-close-btn" onClick={handleCloseSuccess}>
               {t('btnContinueShopping')}
@@ -171,7 +171,7 @@ export default function CartSidebar() {
                           className="cart-item-remove" 
                           onClick={() => removeFromCart(item.product.id)}
                         >
-                          Șterge
+                          {t('removeItem')}
                         </button>
                       </div>
                     </div>
@@ -225,7 +225,7 @@ export default function CartSidebar() {
                         required 
                         value={formData.name} 
                         onChange={handleInputChange}
-                        placeholder="Ex: Popescu Andrei"
+                        placeholder={t('inputNamePlaceholder')}
                       />
                     </div>
 
@@ -238,7 +238,7 @@ export default function CartSidebar() {
                         required 
                         value={formData.phone} 
                         onChange={handleInputChange}
-                        placeholder="Ex: 07xx xxx xxx"
+                        placeholder={t('inputPhonePlaceholder')}
                       />
                     </div>
 
@@ -252,7 +252,7 @@ export default function CartSidebar() {
                           required 
                           value={formData.address} 
                           onChange={handleInputChange}
-                          placeholder="Ex: Str. Trandafirilor Nr. 12, Ap. 4"
+                          placeholder={t('inputAddressPlaceholder')}
                         />
                       </div>
                     )}
@@ -265,7 +265,7 @@ export default function CartSidebar() {
                         name="notes" 
                         value={formData.notes} 
                         onChange={handleInputChange}
-                        placeholder="Ex: Fără tacâmuri, sunați la sosire..."
+                        placeholder={t('inputNotesPlaceholder')}
                       />
                     </div>
 
@@ -292,20 +292,20 @@ export default function CartSidebar() {
                     )}
 
                     <button type="submit" className="place-order-btn" disabled={submitting}>
-                      {submitting ? 'Se trimite...' : `${t('btnPlaceOrder')} (${grandTotal.toFixed(2)} RON)`}
+                      {submitting ? t('sendingGeneric') : `${t('btnPlaceOrder')} (${grandTotal.toFixed(2)} RON)`}
                     </button>
                   </form>
                 ) : (
                   <div className="cart-auth-gate text-center">
                     <span className="gate-icon">🔒</span>
-                    <h4>Autentificare Necesară</h4>
-                    <p>Pentru a trimite comanda, te rugăm să te conectezi sau să creezi un cont nou.</p>
+                    <h4>{t('cartAuthTitle')}</h4>
+                    <p>{t('cartAuthDesc')}</p>
                     <button 
                       type="button" 
                       className="gate-login-btn"
                       onClick={() => setShowAuthModal(true)}
                     >
-                      Conectează-te acum 🔑
+                      {t('cartAuthButton')}
                     </button>
                   </div>
                 )}

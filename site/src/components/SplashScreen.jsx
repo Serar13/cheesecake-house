@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { useApp } from '../context/AppContext';
 import './SplashScreen.css';
 
 const LOGO =
@@ -22,6 +23,7 @@ const prefersReducedMotion = () =>
  * for the Home page runs in parallel underneath it.
  */
 export default function SplashScreen({ onDone }) {
+  const { t } = useApp();
   // 'in' -> 'reveal' -> 'out'. Reduced-motion starts already revealed.
   const [phase, setPhase] = useState(() =>
     prefersReducedMotion() ? 'reveal' : 'in'
@@ -96,7 +98,7 @@ export default function SplashScreen({ onDone }) {
         </div>
       </div>
 
-      <span className="cch-splash-skip">Apasă pentru a continua</span>
+      <span className="cch-splash-skip">{t('splashSkip')}</span>
     </div>
   );
 }

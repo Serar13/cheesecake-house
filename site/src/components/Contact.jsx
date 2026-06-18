@@ -58,7 +58,7 @@ export default function Contact() {
       }, 5000);
     } catch (err) {
       console.error('createOfferRequest failed:', err);
-      setSubmitError('Nu am putut trimite solicitarea. Te rugăm să încerci din nou.');
+      setSubmitError(t('formSubmitError'));
     } finally {
       setSubmitting(false);
     }
@@ -78,14 +78,14 @@ export default function Contact() {
         <div className="contact-grid">
           {/* Store Locations List */}
           <div className="locations-panel">
-            <h3>Laboratoarele Noastre</h3>
-            <p className="locations-intro-text">Ne găsești în Târgu Mureș, Cluj-Napoca și Bistrița. Te așteptăm cu vitrinele pline de prăjituri proaspete!</p>
+            <h3>{t('contactLocationsTitle')}</h3>
+            <p className="locations-intro-text">{t('contactLocationsIntro')}</p>
             
             <div className="store-cards-list">
               {storesLoading ? (
-                <p className="locations-intro-text">Se încarcă locațiile...</p>
+                <p className="locations-intro-text">{t('contactLocationsLoading')}</p>
               ) : stores.length === 0 ? (
-                <p className="locations-intro-text">Locațiile vor fi disponibile în curând.</p>
+                <p className="locations-intro-text">{t('contactLocationsEmpty')}</p>
               ) : stores.map(store => (
                 <div key={store.id} className="store-location-card">
                   <div className="store-card-header">
@@ -93,10 +93,10 @@ export default function Contact() {
                     <h4>{store.name.replace('The Cheesecake House ', '')}</h4>
                   </div>
                   <div className="store-details">
-                    {store.address && <p><strong>📍 Adresă:</strong> {store.address}</p>}
-                    {store.phone && <p><strong>📞 Telefon:</strong> <a href={`tel:${store.phone.replace(/\s+/g, '')}`} className="contact-link">{store.phone}</a></p>}
-                    {store.email && <p><strong>✉️ Email:</strong> <a href={`mailto:${store.email}`} className="contact-link">{store.email}</a></p>}
-                    {store.schedule && <p><strong>🕒 Program:</strong> {store.schedule}</p>}
+                    {store.address && <p><strong>📍 {t('contactAddressLabel')}</strong> {store.address}</p>}
+                    {store.phone && <p><strong>📞 {t('contactPhoneLabel')}</strong> <a href={`tel:${store.phone.replace(/\s+/g, '')}`} className="contact-link">{store.phone}</a></p>}
+                    {store.email && <p><strong>✉️ {t('contactEmailLabel')}</strong> <a href={`mailto:${store.email}`} className="contact-link">{store.email}</a></p>}
+                    {store.schedule && <p><strong>🕒 {t('contactScheduleLabel')}</strong> {store.schedule}</p>}
                   </div>
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(store.address || store.name)}`}
@@ -104,7 +104,7 @@ export default function Contact() {
                     rel="noopener noreferrer"
                     className="map-button"
                   >
-                    Deschide pe Google Maps 🗺️
+                    {t('contactOpenMaps')}
                   </a>
                 </div>
               ))}
@@ -135,7 +135,7 @@ export default function Contact() {
                         required 
                         value={contactData.name} 
                         onChange={handleInputChange}
-                        placeholder="Ex: Ana Maria"
+                        placeholder={t('formNamePlaceholder')}
                       />
                     </div>
                   </div>
@@ -150,7 +150,7 @@ export default function Contact() {
                         required 
                         value={contactData.email} 
                         onChange={handleInputChange}
-                        placeholder="Ex: ana@example.com"
+                        placeholder={t('formEmailPlaceholder')}
                       />
                     </div>
                     <div className="form-field">
@@ -162,7 +162,7 @@ export default function Contact() {
                         required 
                         value={contactData.phone} 
                         onChange={handleInputChange}
-                        placeholder="Ex: 07xxxxxxxx"
+                        placeholder={t('formPhonePlaceholder')}
                       />
                     </div>
                   </div>
@@ -193,7 +193,7 @@ export default function Contact() {
                       required 
                       value={contactData.message} 
                       onChange={handleInputChange}
-                      placeholder="..."
+                      placeholder={t('formDetailsPlaceholder')}
                     ></textarea>
                   </div>
 
@@ -202,7 +202,7 @@ export default function Contact() {
                   )}
 
                   <button type="submit" className="form-submit-btn" disabled={submitting}>
-                    {submitting ? 'Se trimite...' : t('formSubmit')}
+                    {submitting ? t('sendingGeneric') : t('formSubmit')}
                   </button>
                 </form>
               )}

@@ -43,7 +43,7 @@ export default function ReviewsPage() {
     setSubmitting(true);
     try {
       await createReview({
-        name: newReview.name || 'Anonim',
+        name: newReview.name || t('reviewsAnonymous'),
         rating: Number(newReview.rating),
         text: newReview.text,
       });
@@ -51,7 +51,7 @@ export default function ReviewsPage() {
       setSubmitted(true);
     } catch (err) {
       console.error('createReview failed:', err);
-      setSubmitError('Nu am putut trimite recenzia. Te rugăm să încerci din nou.');
+      setSubmitError(t('reviewsSubmitError'));
     } finally {
       setSubmitting(false);
     }
@@ -71,14 +71,14 @@ export default function ReviewsPage() {
         <div className="reviews-page-grid">
           {/* Reviews List */}
           <div className="reviews-list-col">
-            <h3>Părerile Oaspeților Noștri</h3>
+            <h3>{t('reviewsListTitle')}</h3>
             <div className="reviews-list-container">
               {loading ? (
-                <p>Se încarcă recenziile...</p>
+                <p>{t('reviewsLoading')}</p>
               ) : loadError ? (
-                <p>Nu am putut încărca recenziile momentan.</p>
+                <p>{t('reviewsLoadError')}</p>
               ) : reviews.length === 0 ? (
-                <p>Momentan nu există recenzii publicate. Fii primul care lasă una!</p>
+                <p>{t('reviewsEmpty')}</p>
               ) : (
                 reviews.map(review => (
                   <div key={review.id} className="review-card">
@@ -98,39 +98,39 @@ export default function ReviewsPage() {
           {/* Leave a Review Form */}
           <div className="review-form-col">
             <div className="review-form-card">
-              <h3>Spune-ne părerea ta ✍️</h3>
-              <p>Experiența ta este extrem de importantă pentru noi. Ajută-ne să devenim mai buni!</p>
+              <h3>{t('reviewsFormTitle')}</h3>
+              <p>{t('reviewsFormDesc')}</p>
 
               {submitted ? (
                 <div className="form-success-alert">
                   <span>✨</span>
-                  <h4>Mulțumim pentru recenzie!</h4>
-                  <p>Recenzia ta a fost trimisă și este în așteptarea aprobării. Va fi publicată după verificare.</p>
+                  <h4>{t('reviewsSuccessTitle')}</h4>
+                  <p>{t('reviewsSuccessDesc')}</p>
                   <button
                     type="button"
                     className="review-submit-btn"
                     style={{ marginTop: '16px' }}
                     onClick={() => setSubmitted(false)}
                   >
-                    Trimite o altă recenzie
+                    {t('reviewsSubmitAnother')}
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="new-review-form">
                   <div className="form-field">
-                    <label htmlFor="rev-name">Numele Tău</label>
+                    <label htmlFor="rev-name">{t('reviewsName')}</label>
                     <input
                       type="text"
                       id="rev-name"
                       required
                       value={newReview.name}
                       onChange={(e) => setNewReview(prev => ({ ...prev, name: e.target.value }))}
-                      placeholder="Ex: Popescu Ionuț"
+                      placeholder={t('reviewsNamePlaceholder')}
                     />
                   </div>
 
                   <div className="form-field">
-                    <label htmlFor="rev-rating">Nota acordată</label>
+                    <label htmlFor="rev-rating">{t('reviewsRating')}</label>
                     <select
                       id="rev-rating"
                       value={newReview.rating}
@@ -146,14 +146,14 @@ export default function ReviewsPage() {
                   </div>
 
                   <div className="form-field">
-                    <label htmlFor="rev-text">Recenzia ta</label>
+                    <label htmlFor="rev-text">{t('reviewsText')}</label>
                     <textarea
                       id="rev-text"
                       rows="4"
                       required
                       value={newReview.text}
                       onChange={(e) => setNewReview(prev => ({ ...prev, text: e.target.value }))}
-                      placeholder="Scrie aici opinia ta despre produsele sau serviciile noastre..."
+                      placeholder={t('reviewsTextPlaceholder')}
                     ></textarea>
                   </div>
 
@@ -162,7 +162,7 @@ export default function ReviewsPage() {
                   )}
 
                   <button type="submit" className="review-submit-btn" disabled={submitting}>
-                    {submitting ? 'Se trimite...' : 'Trimite Recenzia'}
+                    {submitting ? t('sendingGeneric') : t('reviewsSubmit')}
                   </button>
                 </form>
               )}

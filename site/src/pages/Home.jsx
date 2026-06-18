@@ -73,14 +73,14 @@ export default function Home() {
                 aria-haspopup="listbox"
                 aria-expanded={locationMenuOpen}
               >
-                <span>📍 {selectedStore?.name.replace('The Cheesecake House ', '') || 'Alege locația'}</span>
+                <span>📍 {selectedStore?.name.replace('The Cheesecake House ', '') || t('heroLocationChoose')}</span>
                 <span className="hero-location-arrow" aria-hidden="true">{locationMenuOpen ? '▲' : '▼'}</span>
               </button>
 
               {locationMenuOpen && (
-                <div className="hero-location-menu" role="listbox" aria-label="Alege locația">
+                <div className="hero-location-menu" role="listbox" aria-label={t('heroLocationAria')}>
                   {locations.length === 0 ? (
-                    <span className="hero-location-empty">Se încarcă locațiile...</span>
+                    <span className="hero-location-empty">{t('heroLocationLoading')}</span>
                   ) : locations.map(store => (
                     <button
                       type="button"
@@ -113,12 +113,10 @@ export default function Home() {
       {/* 2. Menu Teaser Section */}
       <section className="home-teaser-section alt-bg">
         <div className="teaser-container text-center">
-          <span className="section-subtitle">Gustul Proaspăt</span>
-          <h2 className="section-title">Meniul Nostru</h2>
+          <span className="section-subtitle">{t('homeFreshTaste')}</span>
+          <h2 className="section-title">{t('menuTitle')}</h2>
           <div className="gold-divider"></div>
-          <p className="teaser-intro">
-            Fiecare felie de cheesecake este pregătită artizanal în laboratoarele noastre, din ingrediente 100% naturale. Descoperă selecția de top.
-          </p>
+          <p className="teaser-intro">{t('homeMenuIntro')}</p>
 
           <div className="teaser-products-preview">
             {loading ? (
@@ -126,7 +124,7 @@ export default function Home() {
                 <ProductCardSkeleton key={i} />
               ))
             ) : menuPreviewProducts.length === 0 ? (
-              <p className="teaser-intro">Meniul va fi disponibil în curând.</p>
+              <p className="teaser-intro">{t('homeMenuSoon')}</p>
             ) : (
               menuPreviewProducts.map(product => (
                 <ProductCard key={product.id} product={product} />
@@ -135,7 +133,7 @@ export default function Home() {
           </div>
 
           <div className="teaser-cta-row">
-            <Link to="/meniu" className="teaser-btn">Vezi Meniul Complet 🍰</Link>
+            <Link to="/meniu" className="teaser-btn">{t('homeViewFullMenu')}</Link>
           </div>
         </div>
       </section>
@@ -152,13 +150,11 @@ export default function Home() {
               />
             </div>
             <div className="about-teaser-text-col text-left">
-              <span className="section-subtitle">Standarde Regale 👑</span>
-              <h2 className="section-title">Furnizor al Casei Regale</h2>
+              <span className="section-subtitle">{t('homeRoyalSubtitle')}</span>
+              <h2 className="section-title">{t('homeRoyalTitle')}</h2>
               <div className="gold-divider-left"></div>
-              <p>
-                Suntem onorați să fim singurul furnizor pe partea de cofetărie consemnat de Familia Regală a României. Pasiunea noastră pentru dulciuri se împletește cu respectul pentru tradiție și ingrediente de cea mai bună calitate.
-              </p>
-              <Link to="/despre-noi" className="teaser-btn">Vezi povestea &amp; reușitele noastre →</Link>
+              <p>{t('homeRoyalText')}</p>
+              <Link to="/despre-noi" className="teaser-btn">{t('homeRoyalCta')}</Link>
             </div>
           </div>
         </div>
@@ -169,13 +165,11 @@ export default function Home() {
         <div className="teaser-container">
           <div className="candybar-teaser-split">
             <div className="candybar-teaser-text-col text-left">
-              <span className="section-subtitle">Evenimente Dulci 👰‍♀️</span>
-              <h2 className="section-title">Candy Bar Personalizat</h2>
+              <span className="section-subtitle">{t('homeCandySubtitle')}</span>
+              <h2 className="section-title">{t('homeCandyTitle')}</h2>
               <div className="gold-divider-left"></div>
-              <p>
-                Organizezi o nuntă, un botez sau o petrecere corporate? Îți punem la dispoziție pachete complete cu mini-cheesecakes, deserturi fine la pahar și decor tematic pentru momente memorabile.
-              </p>
-              <Link to="/candy-bar" className="teaser-btn">Vezi Pachete &amp; Galerie →</Link>
+              <p>{t('homeCandyText')}</p>
+              <Link to="/candy-bar" className="teaser-btn">{t('homeCandyCta')}</Link>
             </div>
             <div className="candybar-teaser-img-col">
               <img 
@@ -195,19 +189,17 @@ export default function Home() {
             <div className="about-teaser-img-col">
               <img 
                 src="https://assets.boosteat.com/images/c165/2024-04-11/202404111109122126617c4d828492/image.jpg" 
-                alt="Rezervări Mese" 
+                alt={t('homeReservationsImageAlt')} 
                 className="about-teaser-img-rounded"
                 style={{ width: '100%', borderRadius: '20px', boxShadow: '0 8px 32px rgba(0,0,0,0.05)', maxHeight: '300px', objectFit: 'cover' }}
               />
             </div>
             <div className="about-teaser-text-col text-left">
-              <span className="section-subtitle">Masă în Cofetărie ☕</span>
-              <h2 className="section-title">Rezervări Mese</h2>
+              <span className="section-subtitle">{t('homeReservationsSubtitle')}</span>
+              <h2 className="section-title">{t('homeReservationsTitle')}</h2>
               <div className="gold-divider-left"></div>
-              <p>
-                Te așteptăm cu drag în cofetăriile noastre primitoare din Târgu Mureș, Cluj-Napoca și Bistrița. Asigură-ți o masă pentru tine și cei dragi și savurați împreună cele mai fine prăjituri din Transilvania.
-              </p>
-              <Link to="/rezervari" className="teaser-btn">Rezervă o Masă Online →</Link>
+              <p>{t('homeReservationsText')}</p>
+              <Link to="/rezervari" className="teaser-btn">{t('homeReservationsCta')}</Link>
             </div>
           </div>
         </div>
@@ -217,8 +209,8 @@ export default function Home() {
       {reviews.length > 0 && (
         <section className="home-reviews-marquee-section">
           <div className="marquee-header text-center">
-            <span className="section-subtitle">Părerile Oaspeților 💬</span>
-            <h2 className="section-title">Ce spun clienții noștri</h2>
+            <span className="section-subtitle">{t('homeGuestsSubtitle')}</span>
+            <h2 className="section-title">{t('homeGuestsTitle')}</h2>
             <div className="gold-divider"></div>
           </div>
 
@@ -241,12 +233,10 @@ export default function Home() {
       {/* 5. Contact Teaser Section */}
       <section className="home-teaser-section alt-bg">
         <div className="teaser-container text-center">
-          <span className="section-subtitle">Vino să ne vizitezi 📍</span>
-          <h2 className="section-title">Locațiile Noastre</h2>
+          <span className="section-subtitle">{t('homeVisitSubtitle')}</span>
+          <h2 className="section-title">{t('homeVisitTitle')}</h2>
           <div className="gold-divider"></div>
-          <p className="teaser-intro">
-            Te așteptăm cu vitrinele pline și cafea proaspătă în laboratoarele noastre din Transilvania.
-          </p>
+          <p className="teaser-intro">{t('homeVisitText')}</p>
 
           <div className="cities-pills-row">
             <span className="city-pill">Târgu Mureș</span>
@@ -255,7 +245,7 @@ export default function Home() {
           </div>
 
           <div className="teaser-cta-row">
-            <Link to="/contact" className="teaser-btn">Vezi Program &amp; Detalii Contact ✉️</Link>
+            <Link to="/contact" className="teaser-btn">{t('homeVisitCta')}</Link>
           </div>
         </div>
       </section>

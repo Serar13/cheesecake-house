@@ -1,7 +1,10 @@
 import React from 'react';
+import { useApp } from '../context/AppContext';
 import './CategoryFilter.css';
 
 export default function CategoryFilter({ categories = [], activeCategory, onCategoryChange }) {
+  const { t } = useApp();
+
   return (
     <div className="category-filter-wrapper">
       <div className="category-filter-container">
@@ -10,7 +13,7 @@ export default function CategoryFilter({ categories = [], activeCategory, onCate
           onClick={() => onCategoryChange('all')}
         >
           <span className="category-icon">🌟</span>
-          <span className="category-name">Toate</span>
+          <span className="category-name">{t('menuAll')}</span>
         </button>
 
         {categories.map(cat => (

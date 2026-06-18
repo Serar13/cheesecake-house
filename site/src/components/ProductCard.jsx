@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 import './ProductCard.css';
 
 export default function ProductCard({ product }) {
-  const { addToCart } = useApp();
+  const { addToCart, t } = useApp();
   const isUnavailable = product.availability === 'unavailable';
 
   return (
@@ -17,7 +17,7 @@ export default function ProductCard({ product }) {
         />
         {product.weight && <span className="product-weight-badge">{product.weight}</span>}
         {isUnavailable && (
-          <span className="product-unavailable-badge">Indisponibil</span>
+          <span className="product-unavailable-badge">{t('productUnavailable')}</span>
         )}
       </div>
       
@@ -31,7 +31,7 @@ export default function ProductCard({ product }) {
         <div className="product-footer">
           <div className="product-price-container">
             <span className="product-price">{product.price.toFixed(2)}</span>
-            <span className="product-currency">RON</span>
+            <span className="product-currency">{t('productCurrency')}</span>
             <span className="product-unit">/ {product.unit}</span>
           </div>
           
@@ -39,9 +39,9 @@ export default function ProductCard({ product }) {
             className="add-to-cart-btn"
             onClick={() => addToCart(product)}
             disabled={isUnavailable}
-            aria-label={isUnavailable ? `${product.name} indisponibil` : `Adaugă ${product.name} în coș`}
+            aria-label={isUnavailable ? `${product.name} ${t('productUnavailableAria')}` : `${t('addToCart')} ${product.name}`}
           >
-            {isUnavailable ? 'Indisponibil' : 'Adaugă ➕'}
+            {isUnavailable ? t('productUnavailable') : t('addToCart')}
           </button>
         </div>
       </div>

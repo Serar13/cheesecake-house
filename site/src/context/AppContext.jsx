@@ -96,6 +96,7 @@ export const AppProvider = ({ children }) => {
 
   useEffect(() => {
     localStorage.setItem('cheesecake_lang', language);
+    document.documentElement.lang = language;
   }, [language]);
 
   useEffect(() => {

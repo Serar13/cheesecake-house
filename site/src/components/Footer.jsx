@@ -3,8 +3,7 @@ import { useApp } from '../context/AppContext';
 import './Footer.css';
 
 export default function Footer() {
-  const { currentUser, setShowAuthModal, t, language } = useApp();
-  const isRo = language === 'ro';
+  const { currentUser, setShowAuthModal, t } = useApp();
 
   return (
     <footer className="main-footer-section">
@@ -23,7 +22,7 @@ export default function Footer() {
               />
               <div className="footer-brand-text">
                 <h4>THE CHEESECAKE HOUSE</h4>
-                <span className="footer-brand-motto">Find joy in the simple</span>
+                <span className="footer-brand-motto">{t('footerMotto')}</span>
               </div>
             </div>
             <p className="footer-description">{t('footerBrandDesc')}</p>
@@ -77,16 +76,16 @@ export default function Footer() {
           <div className="footer-nav-col">
             <h4>{t('footerQuickLinks')}</h4>
             <ul className="footer-links-list">
-              <li><Link to="/">{t('navMenu') === 'Menu' ? 'Home' : t('navMenu') === 'Menü' ? 'Főoldal' : 'Acasă'}</Link></li>
+              <li><Link to="/">{t('navHome')}</Link></li>
               <li><Link to="/meniu">{t('navMenu')}</Link></li>
               <li><Link to="/despre-noi">{t('navAbout')}</Link></li>
               <li><Link to="/candy-bar">{t('navCandyBar')}</Link></li>
-              <li><Link to="/rezervari">{isRo ? 'Rezervări' : 'Reservations'}</Link></li>
+              <li><Link to="/rezervari">{t('navReservations')}</Link></li>
               <li><Link to="/contact">{t('navContact')}</Link></li>
               {currentUser ? (
-                <li><Link to="/profil" className="footer-profile-link">{isRo ? 'Profilul Meu 👤' : 'My Profile 👤'}</Link></li>
+                <li><Link to="/profil" className="footer-profile-link">{t('footerProfile')}</Link></li>
               ) : (
-                <li><button onClick={() => setShowAuthModal(true)} className="footer-login-link-btn">{isRo ? 'Conectare 🔑' : 'Login 🔑'}</button></li>
+                <li><button onClick={() => setShowAuthModal(true)} className="footer-login-link-btn">{t('footerLogin')}</button></li>
               )}
             </ul>
           </div>
@@ -97,15 +96,15 @@ export default function Footer() {
             <div className="footer-schedule-grid">
               <div className="schedule-item">
                 <span className="schedule-city">📍 Tg. Mureș</span>
-                <span className="schedule-hours">Luni - Duminică: 10:00 - 19:30</span>
+                <span className="schedule-hours">{t('footerMonSun')}: 10:00 - 19:30</span>
               </div>
               <div className="schedule-item">
                 <span className="schedule-city">📍 Cluj-Napoca</span>
-                <span className="schedule-hours">Luni - Duminică: 10:00 - 21:00</span>
+                <span className="schedule-hours">{t('footerMonSun')}: 10:00 - 21:00</span>
               </div>
               <div className="schedule-item">
                 <span className="schedule-city">📍 Bistrița</span>
-                <span className="schedule-hours">Luni - Duminică: 10:00 - 20:00</span>
+                <span className="schedule-hours">{t('footerMonSun')}: 10:00 - 20:00</span>
               </div>
             </div>
           </div>
@@ -167,14 +166,14 @@ export default function Footer() {
             © Copyright 2026 THE CHEESECAKE HOUSE S.R.L.
           </p>
           <div className="footer-legal-links-inline">
-            <a href="#privacy">{isRo ? 'Confidențialitate' : 'Privacy'}</a>
+            <a href="#privacy">{t('footerPrivacy')}</a>
             <span className="inline-sep">•</span>
-            <a href="#terms">{isRo ? 'Termeni și Condiții' : 'Terms & Conditions'}</a>
+            <a href="#terms">{t('footerTerms')}</a>
             <span className="inline-sep">•</span>
             <a href="#cookies">Cookies</a>
           </div>
           <p className="footer-powered-by">
-            Powered by Boost Eat
+            {t('footerPoweredBy')}
           </p>
         </div>
 
