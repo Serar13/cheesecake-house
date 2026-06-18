@@ -1,10 +1,9 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import './Footer.css';
 
 export default function Footer() {
-  const { currentUser, setShowAuthModal, setShowProfileModal, t, language } = useApp();
+  const { currentUser, setShowAuthModal, t, language } = useApp();
   const isRo = language === 'ro';
 
   return (
