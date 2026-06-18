@@ -48,11 +48,19 @@
   max-width: 100%;
 }
 
+.cch-splash-logo-wrap {
+  position: relative;
+  width: 132px;
+  height: 132px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 16px; /* keeps shimmer clipped to logo shape */
+}
+
 .cch-splash-logo {
   width: 132px;
   height: 132px;
   object-fit: contain;
-  flex-shrink: 0;
   opacity: 0;
   transform: scale(0.82);
   animation: cch-logo-in 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -70,6 +78,29 @@
     transform: scale(1);
   }
 }
+
+/* Golden shimmer beam — runs once, 1 s after logo finishes appearing */
+.cch-splash-logo-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* Diagonal beam: narrow gradient strip at 115deg */
+  background: linear-gradient(
+    115deg,
+    rgba(255, 230, 155, 0) 30%,
+    rgba(255, 230, 155, 0.72) 50%,
+    rgba(255, 230, 155, 0) 70%
+  );
+  transform: translateX(-100%);
+  animation: cch-logo-shimmer 0.65s cubic-bezier(0.4, 0, 0.2, 1) 1s forwards;
+  pointer-events: none;
+}
+
+@keyframes cch-logo-shimmer {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(150%); }
+}
+
 
 /* Wordmark collapsed by default, revealed on .reveal */
 .cch-brand-wordmark {
@@ -155,6 +186,11 @@
 
 /* ---------- Responsive ---------- */
 @media (max-width: 560px) {
+  .cch-splash-logo-wrap {
+    width: 92px;
+    height: 92px;
+  }
+
   .cch-splash-logo {
     width: 92px;
     height: 92px;
@@ -179,6 +215,10 @@
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
+  .cch-splash-logo-wrap::after {
+    animation: none;
+  }
+
   .cch-splash-logo {
     animation: none;
     opacity: 1;
